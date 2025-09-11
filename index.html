@@ -18,7 +18,7 @@
 
     <style>
         /* ============================================= */
-        /* 1. CONFIGURAÇÃO GERAL E PALETA DE CORES       */
+        /* 1. CONFIGURAÇÃO GERAL E PALETA DE CORES      */
         /* ============================================= */
         :root {
             --pl-1: #06b6d4; /* Cyan-500 */
@@ -511,9 +511,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 ]
             },
             "Jueves 11 sep (tarde)": {
-                total_participants: 0,
+                total_participants: 8,
                 questions: [
-                    { labels: [], data: [], qtde: [] }, { labels: [], data: [], qtde: [] }, { labels: [], data: [], qtde: [] }
+                    {
+                        labels: ["Alta interacción (se acercan, conversan en grupos, intercambian contactos)", "Interacción moderada (conversaciones pequeñas, más en círculos conocidos)"],
+                        data: [62.5, 37.5],
+                        qtde: [5, 3]
+                    },
+                    {
+                        labels: ["Las consumen completamente y las desechan en el lugar adecuado", "Las dejan a medio consumir en las mesas y sillas"],
+                        data: [50.0, 50.0],
+                        qtde: [4, 4]
+                    },
+                    {
+                        labels: ["Mayor atención en la primera mitad", "Atención fluctuante (sube y baja en distintos momentos)", "Se mantiene igual (atención estable)"],
+                        data: [37.5, 37.5, 25.0],
+                        qtde: [3, 3, 2]
+                    }
                 ]
             }
         }
@@ -587,42 +601,42 @@ document.addEventListener('DOMContentLoaded', () => {
             const linksHTML = navLinks.map(link => {
                 const isActive = appState.currentPage === link.page;
                 return `<a href="#" data-page="${link.page}" 
-                           class="nav-link px-4 py-3 rounded-md text-sm font-semibold transition-all duration-200  
-                                ${isActive ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white hover:bg-white/5'}">
-                            ${link.key}
-                        </a>`;
+                                class="nav-link px-4 py-3 rounded-md text-sm font-semibold transition-all duration-200  
+                                    ${isActive ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white hover:bg-white/5'}">
+                                ${link.key}
+                            </a>`;
             }).join('');
 
             headerHTML = `<div class="container mx-auto px-4 py-2 flex justify-between items-center print:hidden">
-                            <a href="#" data-page="inicio" class="nav-link flex items-center gap-2 text-white font-bold text-lg">
-                                <i data-lucide="bar-chart-3"></i> <span data-lang-key="main_title"></span>
-                            </a>
-                            <nav class="hidden md:flex items-center gap-2">
-                                ${linksHTML}
-                                <a href="#" id="logout-btn" class="ml-4 text-white/60 hover:text-white transition-colors" title="${getLangText('logout')}">
-                                    <i data-lucide="log-out" class="w-6 h-6"></i>
+                                <a href="#" data-page="inicio" class="nav-link flex items-center gap-2 text-white font-bold text-lg">
+                                    <i data-lucide="bar-chart-3"></i> <span data-lang-key="main_title"></span>
                                 </a>
-                            </nav>
-                            </div>`; 
+                                <nav class="hidden md:flex items-center gap-2">
+                                    ${linksHTML}
+                                    <a href="#" id="logout-btn" class="ml-4 text-white/60 hover:text-white transition-colors" title="${getLangText('logout')}">
+                                        <i data-lucide="log-out" class="w-6 h-6"></i>
+                                    </a>
+                                </nav>
+                                </div>`; 
         } else { // Public Header
             headerHTML = `<nav class="container mx-auto px-4 py-2 flex justify-between items-center print:hidden">
-                            <a href="#" data-page="landing" class="nav-link flex items-center gap-2 text-white font-bold text-lg">
-                                <i data-lucide="bar-chart-3"></i> <span data-lang-key="main_title"></span>
-                            </a>
-                            <div class="flex items-center gap-6">
-                                <div class="relative">
-                                    <button id="lang-switcher-btn" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
-                                        <i data-lucide="globe" class="w-5 h-5"></i>
-                                        <span class="hidden sm:inline">${lang.lang_name}</span>
-                                    </button>
-                                    <div id="lang-menu" class="absolute right-0 mt-2 w-36 bg-white rounded-md shadow-lg hidden">
-                                        <a href="#" class="lang-switcher block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="es">Español</a>
-                                        <a href="#" class="lang-switcher block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="pt">Português</a>
+                                <a href="#" data-page="landing" class="nav-link flex items-center gap-2 text-white font-bold text-lg">
+                                    <i data-lucide="bar-chart-3"></i> <span data-lang-key="main_title"></span>
+                                </a>
+                                <div class="flex items-center gap-6">
+                                    <div class="relative">
+                                        <button id="lang-switcher-btn" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+                                            <i data-lucide="globe" class="w-5 h-5"></i>
+                                            <span class="hidden sm:inline">${lang.lang_name}</span>
+                                        </button>
+                                        <div id="lang-menu" class="absolute right-0 mt-2 w-36 bg-white rounded-md shadow-lg hidden">
+                                            <a href="#" class="lang-switcher block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="es">Español</a>
+                                            <a href="#" class="lang-switcher block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="pt">Português</a>
+                                        </div>
                                     </div>
+                                    <a href="#" data-page="analisis" class="nav-link text-white bg-white/10 hover:bg-white/20 transition-colors font-semibold px-4 py-2 rounded-lg" data-lang-key="access_platform"></a>
                                 </div>
-                                <a href="#" data-page="analisis" class="nav-link text-white bg-white/10 hover:bg-white/20 transition-colors font-semibold px-4 py-2 rounded-lg" data-lang-key="access_platform"></a>
-                            </div>
-                        </nav>`;
+                            </nav>`;
         }
         header.innerHTML = headerHTML;
         lucide.createIcons();
@@ -726,7 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
             navContainer.innerHTML = Object.keys(this.fullData).map(sheetName => `
                 <button data-sheet="${sheetName}" 
                         class="sheet-link w-full text-left font-semibold p-3 rounded-lg transition-all duration-200 body-medium
-                               ${activeSheetName === sheetName ? 'sidebar-link-active' : 'text-[var(--pl-5)] hover:translate-x-1'}">
+                                ${activeSheetName === sheetName ? 'sidebar-link-active' : 'text-[var(--pl-5)] hover:translate-x-1'}">
                     ${sheetName}
                 </button>`).join(''); 
         }
@@ -746,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p class="body-small font-semibold text-gray-500" data-lang-key="participants"></p>
                         </div>`;
                 } else {
-                     kpiContainer.innerHTML = '';
+                         kpiContainer.innerHTML = '';
                 }
             }
 
@@ -794,9 +808,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!analyses[0] || analyses[0].data.length === 0) {
                 container.innerHTML = `<div class="main-card p-8 text-center">
-                                         <i data-lucide="timer" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
-                                         <h3 class="headline-3 text-[var(--pl-5)]">Esperando la próxima encuesta</h3>
-                                       </div>`;
+                                             <i data-lucide="timer" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+                                             <h3 class="headline-3 text-[var(--pl-5)]">Esperando la próxima encuesta</h3>
+                                           </div>`;
                 lucide.createIcons();
                 return;
             }
@@ -1055,4 +1069,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-
