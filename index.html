@@ -301,7 +301,7 @@
                     </div>
                 </header>
                 <div id="resumen-content" class="space-y-12">
-                    </div>
+                </div>
             </div>
         </section>
 
@@ -352,7 +352,7 @@
                 <div id="feedback-container" class="max-w-2xl mx-auto">
                     <div class="main-card p-8">
                         <div id="feedback-form-content">
-                            </div>
+                        </div>
                         <div id="feedback-success-message" class="hidden text-center py-10">
                              <div class="mb-4">
                                 <i data-lucide="check-circle-2" class="w-16 h-16 text-green-500 mx-auto"></i>
@@ -399,6 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "doc_in_development": "La documentación detallada para los KPIs y gráficos de esta encuesta está en desarrollo.",
             "your_school": "Su Escuela",
             "participants": "Participantes",
+            "pending_survey": "Esperando el disparo de la próxima encuesta",
             "feedback_title": "¡Su opinión es importante!", "feedback_subtitle": "Ayúdenos a mejorar. Su feedback es fundamental para la evolución de esta plataforma.", "feedback_rating": "Su calificación general:", "feedback_type": "¿Qué le gustaría hacer?", "feedback_compliment": "Felicitar", "feedback_suggestion": "Sugerir mejora", "feedback_placeholder_compliment": "¡Cuéntenos qué le gustó! Su elogio nos motiva a seguir adelante.", "feedback_placeholder_suggestion": "¿Qué podemos mejorar? Describa su idea para que podamos evaluarla.", "feedback_name": "Su nombre (opcional)", "feedback_email": "Su correo electrónico (opcional)", "feedback_share": "Autorizo la publicación de mi comentario en las redes sociales.", "feedback_submit": "Enviar Feedback", "feedback_success_title": "¡Gracias!", "feedback_success_text": "Su feedback ha sido enviado con éxito. ¡Apreciamos su contribución!",
             "questions": {
                 "Miércoles 10 sep (tarde)": [
@@ -433,6 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "doc_in_development": "A documentação detalhada para os KPIs e gráficos desta pesquisa está em desenvolvimento.",
             "your_school": "Sua Escola",
             "participants": "Participantes",
+            "pending_survey": "Aguardando o disparo da próxima enquete",
             "feedback_title": "Sua opinião é importante!", "feedback_subtitle": "Ajude-nos a mejorar. Seu feedback é fundamental para a evolução desta plataforma.", "feedback_rating": "Sua avaliação geral:", "feedback_type": "O que você gostaria de fazer?", "feedback_compliment": "Elogiar", "feedback_suggestion": "Sugerir melhoria", "feedback_placeholder_compliment": "Conte-nos o que você gostou! Seu elogio nos motiva a continuar.", "feedback_placeholder_suggestion": "O que podemos melhorar? Descreva sua ideia para que possamos avaliá-la.", "feedback_name": "Seu nome (opcional)", "feedback_email": "Seu e-mail (opcional)", "feedback_share": "Autorizo a publicação do meu comentário nas redes sociais.", "feedback_submit": "Enviar Feedback", "feedback_success_title": "Obrigado!", "feedback_success_text": "Seu feedback foi enviado com sucesso. Agradecemos sua contribuição!",
             "questions": {
                 "Miércoles 10 sep (tarde)": [
@@ -486,9 +488,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 ]
             },
             "Jueves 11 sep (mañana)": {
-                total_participants: 0,
+                total_participants: 6,
                 questions: [
-                    { labels: [], data: [], qtde: [] }, { labels: [], data: [], qtde: [] }, { labels: [], data: [], qtde: [] }, { labels: [], data: [], qtde: [] }
+                    {
+                        labels: ["Mayoría llega tarde", "Asistencia dispersa", "Llega una parte puntual y otra con retraso"],
+                        data: [66.7, 16.7, 16.7],
+                        qtde: [4, 1, 1]
+                    },
+                    {
+                        labels: ["Interacción moderada", "Alta interacción"],
+                        data: [83.3, 16.7],
+                        qtde: [5, 1]
+                    },
+                    {
+                        labels: ["Conversaciones prolongadas", "Conversaciones breves"],
+                        data: [50.0, 50.0],
+                        qtde: [3, 3]
+                    },
+                    {
+                        labels: ["Alta diversidad", "Diversidad moderada", "Baja diversidad"],
+                        data: [33.3, 33.3, 33.3],
+                        qtde: [2, 2, 2]
+                    }
                 ]
             },
             "Jueves 11 sep (tarde)": {
@@ -776,9 +797,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!analyses[0] || analyses[0].data.length === 0) {
                 container.innerHTML = `<div class="main-card p-8 text-center">
                                          <i data-lucide="timer" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
-                                         <h3 class="headline-3 text-[var(--pl-5)]">Esperando disparo de la encuesta!</h3>
+                                         <h3 class="headline-3 text-[var(--pl-5)]" data-lang-key="pending_survey"></h3>
                                        </div>`;
                 lucide.createIcons();
+                updateUIText();
                 return;
             }
 
