@@ -399,7 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
             "doc_in_development": "La documentación detallada para los KPIs y gráficos de esta encuesta está en desarrollo.",
             "your_school": "Su Escuela",
             "participants": "Participantes",
-            "pending_survey": "Esperando el disparo de la próxima encuesta",
             "feedback_title": "¡Su opinión es importante!", "feedback_subtitle": "Ayúdenos a mejorar. Su feedback es fundamental para la evolución de esta plataforma.", "feedback_rating": "Su calificación general:", "feedback_type": "¿Qué le gustaría hacer?", "feedback_compliment": "Felicitar", "feedback_suggestion": "Sugerir mejora", "feedback_placeholder_compliment": "¡Cuéntenos qué le gustó! Su elogio nos motiva a seguir adelante.", "feedback_placeholder_suggestion": "¿Qué podemos mejorar? Describa su idea para que podamos evaluarla.", "feedback_name": "Su nombre (opcional)", "feedback_email": "Su correo electrónico (opcional)", "feedback_share": "Autorizo la publicación de mi comentario en las redes sociales.", "feedback_submit": "Enviar Feedback", "feedback_success_title": "¡Gracias!", "feedback_success_text": "Su feedback ha sido enviado con éxito. ¡Apreciamos su contribución!",
             "questions": {
                 "Miércoles 10 sep (tarde)": [
@@ -434,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
             "doc_in_development": "A documentação detalhada para os KPIs e gráficos desta pesquisa está em desenvolvimento.",
             "your_school": "Sua Escola",
             "participants": "Participantes",
-            "pending_survey": "Aguardando o disparo da próxima enquete",
             "feedback_title": "Sua opinião é importante!", "feedback_subtitle": "Ajude-nos a mejorar. Seu feedback é fundamental para a evolução desta plataforma.", "feedback_rating": "Sua avaliação geral:", "feedback_type": "O que você gostaria de fazer?", "feedback_compliment": "Elogiar", "feedback_suggestion": "Sugerir melhoria", "feedback_placeholder_compliment": "Conte-nos o que você gostou! Seu elogio nos motiva a continuar.", "feedback_placeholder_suggestion": "O que podemos melhorar? Descreva sua ideia para que possamos avaliá-la.", "feedback_name": "Seu nome (opcional)", "feedback_email": "Seu e-mail (opcional)", "feedback_share": "Autorizo a publicação do meu comentário nas redes sociais.", "feedback_submit": "Enviar Feedback", "feedback_success_title": "Obrigado!", "feedback_success_text": "Seu feedback foi enviado com sucesso. Agradecemos sua contribuição!",
             "questions": {
                 "Miércoles 10 sep (tarde)": [
@@ -468,47 +466,47 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         full_data: {
             "Miércoles 10 sep (tarde)": {
-                total_participants: 10,
+                total_participants: 11,
                 questions: [
                     {
                         labels: ["Femenina", "Balanceada", "Masculina"],
-                        data: [70.0, 20.0, 10.0],
-                        qtde: [7, 2, 1]
+                        data: [72.7, 18.2, 9.1],
+                        qtde: [8, 2, 1]
                     },
                     {
                         labels: ["Entusiasmo", "Curiosidad", "Neutralidad"],
-                        data: [50.0, 40.0, 10.0],
-                        qtde: [5, 4, 1]
+                        data: [45.5, 45.5, 9.1],
+                        qtde: [5, 5, 1]
                     },
                     {
-                        labels: ["Medio", "Alto"],
-                        data: [60.0, 40.0],
-                        qtde: [6, 4]
+                        labels: ["Media", "Alto"],
+                        data: [54.5, 45.5],
+                        qtde: [6, 5]
                     }
                 ]
             },
             "Jueves 11 sep (mañana)": {
-                total_participants: 6,
+                total_participants: 8,
                 questions: [
                     {
-                        labels: ["Mayoría llega tarde", "Asistencia dispersa", "Llega una parte puntual y otra con retraso"],
-                        data: [66.7, 16.7, 16.7],
-                        qtde: [4, 1, 1]
+                        labels: ["Mayoría llega tarde", "Asistencia dispersa", "Llega una parte puntual y otra con retraso", "Mayoría llega antes o a la hora prevista"],
+                        data: [62.5, 12.5, 12.5, 12.5],
+                        qtde: [5, 1, 1, 1]
                     },
                     {
                         labels: ["Interacción moderada", "Alta interacción"],
-                        data: [83.3, 16.7],
-                        qtde: [5, 1]
+                        data: [75.0, 25.0],
+                        qtde: [6, 2]
                     },
                     {
                         labels: ["Conversaciones prolongadas", "Conversaciones breves"],
                         data: [50.0, 50.0],
-                        qtde: [3, 3]
+                        qtde: [4, 4]
                     },
                     {
-                        labels: ["Alta diversidad", "Diversidad moderada", "Baja diversidad"],
-                        data: [33.3, 33.3, 33.3],
-                        qtde: [2, 2, 2]
+                        labels: ["Baja diversidad", "Diversidad moderada", "Alta diversidad"],
+                        data: [37.5, 37.5, 25.0],
+                        qtde: [3, 3, 2]
                     }
                 ]
             },
@@ -797,10 +795,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!analyses[0] || analyses[0].data.length === 0) {
                 container.innerHTML = `<div class="main-card p-8 text-center">
                                          <i data-lucide="timer" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
-                                         <h3 class="headline-3 text-[var(--pl-5)]" data-lang-key="pending_survey"></h3>
+                                         <h3 class="headline-3 text-[var(--pl-5)]">Esperando disparo de la encuesta!</h3>
                                        </div>`;
                 lucide.createIcons();
-                updateUIText();
                 return;
             }
 
