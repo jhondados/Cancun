@@ -486,27 +486,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 ]
             },
             "Jueves 11 sep (mañana)": {
-                total_participants: 8,
+                total_participants: 9,
                 questions: [
                     {
-                        labels: ["Mayoría llega tarde", "Asistencia dispersa", "Llega una parte puntual y otra con retraso", "Mayoría llega antes o a la hora prevista"],
-                        data: [62.5, 12.5, 12.5, 12.5],
-                        qtde: [5, 1, 1, 1]
+                        labels: ["Mayoría llega tarde", "Mayoría llega a tiempo", "Llegada mixta", "Asistencia dispersa"],
+                        data: [55.6, 22.2, 11.1, 11.1],
+                        qtde: [5, 2, 1, 1]
                     },
                     {
                         labels: ["Interacción moderada", "Alta interacción"],
-                        data: [75.0, 25.0],
-                        qtde: [6, 2]
+                        data: [66.7, 33.3],
+                        qtde: [6, 3]
                     },
                     {
                         labels: ["Conversaciones prolongadas", "Conversaciones breves"],
-                        data: [50.0, 50.0],
-                        qtde: [4, 4]
+                        data: [55.6, 44.4],
+                        qtde: [5, 4]
                     },
                     {
-                        labels: ["Baja diversidad", "Diversidad moderada", "Alta diversidad"],
-                        data: [37.5, 37.5, 25.0],
-                        qtde: [3, 3, 2]
+                        labels: ["Diversidad moderada", "Alta diversidad", "Baja diversidad"],
+                        data: [44.4, 33.3, 22.2],
+                        qtde: [4, 3, 2]
                     }
                 ]
             },
@@ -795,7 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!analyses[0] || analyses[0].data.length === 0) {
                 container.innerHTML = `<div class="main-card p-8 text-center">
                                          <i data-lucide="timer" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
-                                         <h3 class="headline-3 text-[var(--pl-5)]">Esperando disparo de la encuesta!</h3>
+                                         <h3 class="headline-3 text-[var(--pl-5)]">Esperando la próxima encuesta</h3>
                                        </div>`;
                 lucide.createIcons();
                 return;
@@ -1055,3 +1055,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
