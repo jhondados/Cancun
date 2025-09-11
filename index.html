@@ -837,22 +837,25 @@ document.addEventListener('DOMContentLoaded', () => {
                         ] 
                     }, 
                     options: { 
-                        indexAxis: 'x', 
+                        indexAxis: 'y', 
                         responsive: true, 
                         maintainAspectRatio: false, 
                         scales: { 
-                            x: { ticks: { color: CHART_COLORS.textPrimary, font: { size: 12 } }, grid: { display: false } },
-                            y: { 
+                            x: { 
                                 ticks: { color: CHART_COLORS.textSecondary, callback: (v) => v + '%' }, 
                                 grid: { color: CHART_COLORS.gridColor },
                                 suggestedMax: maxDataValue + 15
+                            },
+                            y: { 
+                                ticks: { color: CHART_COLORS.textPrimary, font: { size: 12 } }, 
+                                grid: { display: false } 
                             }
                         }, 
                         plugins: { 
                             legend: { display: false }, 
                             datalabels: {
                                 anchor: 'end',
-                                align: 'top',
+                                align: 'end',
                                 font: { weight: 'bold' },
                                 formatter: (value, context) => {
                                     const qty = context.dataset.qtde[context.dataIndex];
@@ -945,18 +948,26 @@ document.addEventListener('DOMContentLoaded', () => {
                             datasets: [{ data: analise.data, qtde: analise.qtde, backgroundColor: CHART_COLORS.blue, borderRadius: 6 }]
                         },
                         options: {
+                            indexAxis: 'y',
                             responsive: true,
                             maintainAspectRatio: false,
                             animation: { duration: 0 }, // Disable animation for printing
                             scales: {
-                                x: { ticks: { color: '#000', font: { size: 9 } }, grid: { display: false } },
-                                y: { ticks: { color: '#555', callback: (v) => v + '%' }, grid: { color: '#ddd' }, suggestedMax: maxDataValue + 15 }
+                                x: { 
+                                    ticks: { color: '#555', callback: (v) => v + '%' }, 
+                                    grid: { color: '#ddd' }, 
+                                    suggestedMax: maxDataValue + 15 
+                                },
+                                y: { 
+                                    ticks: { color: '#000', font: { size: 9 } }, 
+                                    grid: { display: false } 
+                                }
                             },
                             plugins: {
                                 legend: { display: false },
                                 datalabels: { 
                                     anchor: 'end', 
-                                    align: 'top', 
+                                    align: 'end', 
                                     font: { weight: 'bold', size: 9 }, 
                                     formatter: (value, context) => {
                                         const qty = context.dataset.qtde[context.dataIndex];
