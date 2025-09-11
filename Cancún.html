@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta Cancún - Plataforma de Análisis</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================= */
+        /* 1. CONFIGURAÇÃO GERAL E PALETA DE CORES       */
+        /* ============================================= */
+        :root {
+            --pl-1: #06b6d4; /* Cyan-500 */
+            --pl-2: #a5f3fc; /* Cyan-200 */
+            --pl-3: #fef3c7; /* Amber-100 (Sand) */
+            --pl-4: #38bdf8; /* Sky-400 */
+            --pl-5: #0c4a6e; /* Sky-900 (Deep Blue) */
+            --pl-6: #0ea5e9; /* Sky-500 */
+
+            --font-heading: 'Gabarito', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: #f7f9ff; /* Fundo geral mais suave */
+            color: var(--pl-5);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Fundo com gradiente sutil */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(ellipse at 10% 90%, hsla(185, 80%, 50%, 0.15) 0%, transparent 40%), 
+                radial-gradient(ellipse at 90% 20%, hsla(195, 70%, 50%, 0.15) 0%, transparent 40%);
+            z-index: -1;
+            animation: moveGradient 30s ease-in-out infinite;
+        }
+        @media print { body::before { display: none !important; } }
+
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 200px;
+            background-image: url('https://svgsilh.com/svg/154963.svg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            z-index: -2;
+        }
+        @media print { body::after { display: none; } }
+        /* ============================================= */
+        /* 2. ESTILOS TIPOGRÁFICOS                       */
+        /* ============================================= */
+        .headline-1 { font-family: var(--font-heading); font-size: 48px; line-height: 1.2; font-weight: 800; }
+        .headline-2 { font-family: var(--font-heading); font-size: 28px; line-height: 1.2; font-weight: 800; }
+        .headline-3 { font-family: var(--font-heading); font-size: 20px; line-height: 1.3; font-weight: 800; }
+        .body-big { font-family: var(--font-body); font-size: 24px; line-height: 1.5; }
+        .body-medium { font-family: var(--font-body); font-size: 16px; line-height: 1.6; }
+        .body-small { font-family: var(--font-body); font-size: 12px; line-height: 1.5; }
+
+        /* ============================================= */
+        /* 3. COMPONENTES GERAIS                         */
+        /* ============================================= */
+        .main-card {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(38, 18, 128, 0.05), inset 0 2px 4px 0 rgba(255,255,255,0.5);
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+        .main-card:hover {
+            box-shadow: 0 12px 25px rgba(38, 18, 128, 0.08), inset 0 2px 4px 0 rgba(255,255,255,0.5);
+        }
+        
+        .btn-primary {
+            background-image: linear-gradient(45deg, var(--pl-6) 0%, var(--pl-4) 100%);
+            color: white;
+            font-family: var(--font-body);
+            font-weight: 600;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px 0 rgba(54, 54, 247, 0.3);
+            border: none;
+        }
+        .btn-primary:hover {
+            background-image: linear-gradient(45deg, var(--pl-5) 0%, var(--pl-6) 100%);
+            box-shadow: 0 6px 16px 0 rgba(54, 54, 247, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* NOVO: Estilo do Hero da Landing Page */
+        #landing-hero {
+            background-image: url('https://images.unsplash.com/photo-1517404215738-15263e9f9178?q=80&w=2670&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        #landing-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(12, 74, 110, 0.6); /* Overlay azul escuro semi-transparente, da paleta --pl-5 */
+            z-index: 0;
+        }
+
+        /* NOVO: Fundo sutil para a página de análise */
+        .analisis-page-bg {
+            background: 
+                radial-gradient(ellipse at 80% 10%, hsla(185, 80%, 50%, 0.08) 0%, transparent 40%), 
+                radial-gradient(ellipse at 10% 80%, hsla(195, 70%, 50%, 0.08) 0%, transparent 40%);
+            background-attachment: fixed; /* Para que o gradiente não role com o conteúdo */
+        }
+        
+        #lang-menu {
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            transform-origin: top right;
+        }
+        #lang-menu.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        
+        .sidebar-link-active {
+            background-color: var(--pl-2) !important;
+            color: var(--pl-5) !important;
+            font-weight: 700;
+        }
+
+        .sheet-link:not(.sidebar-link-active):hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(0, 255, 171, 0.5);
+        }
+
+        /* Transição suave entre páginas */
+        .page { display: none; animation: pageFadeIn 0.6s ease-out; }
+        .page.active { display: block; }
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes highlight {
+            0% { background-color: rgba(0, 255, 171, 0); }
+            50% { background-color: rgba(0, 255, 171, 0.3); }
+            100% { background-color: rgba(0, 255, 171, 0); }
+        }
+        .highlight-animation {
+            animation: highlight 2s ease-in-out;
+            border-radius: 0.5rem; /* Match the details element radius */
+        }
+        
+        /* ============================================= */
+        /* 4. ESTILOS DE IMPRESSÃO                       */
+        /* ============================================= */
+        @media print {
+            @page {
+                margin: 0.5cm; /* Margen de la página muy reducido */
+            }
+            body { background: white !important; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            header, footer, nav, aside, .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            
+            .main-card {
+                background: transparent !important;
+                border: 1px solid #ddd !important;
+                box-shadow: none !important; 
+                transform: none !important; 
+                page-break-inside: avoid;
+            }
+            main { margin: 0 !important; padding: 0 !important; max-width: 100% !important; } /* Sin margen interno */
+            h1, h2, h3, p, span, div, li { color: black !important; }
+
+            #print-header { margin-bottom: 1rem !important; }
+
+            /* Layout de Impressão */
+            #analisis-app { display: block !important; }
+            #page-content { display: block !important; }
+
+            .print-section {
+                page-break-before: auto;
+                page-break-after: always; /* Começa cada evento em uma nova página */
+            }
+            .print-section:last-child {
+                page-break-after: avoid;
+            }
+
+            .print-chart-card {
+                page-break-inside: avoid;
+            }
+            .print-chart-container {
+                width: 100%;
+                height: 180px !important; /* Altura del gráfico muy reducida */
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header id="main-header" class="bg-[var(--pl-5)] text-white sticky top-0 z-50 shadow-lg">
+    </header>
+
+    <main class="flex-grow">
+        
+        <section id="page-landing" class="page">
+            <div id="landing-hero" class="min-h-[90vh] flex items-center justify-center text-center px-6 relative">                   
+                <div class="max-w-4xl mx-auto relative z-10">
+                    <h1 class="headline-1 text-6xl md:text-8xl text-white" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);" data-lang-key="main_title"></h1>
+                    <div class="mt-8">
+                        <a href="#" data-page="analisis" class="nav-link btn-primary text-xl px-10 py-4" data-lang-key="access_platform"></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-login" class="page">
+            <div class="min-h-screen flex items-center justify-center p-4">
+                <div class="main-card w-full max-w-sm m-4 p-8 text-center">
+                    <h1 class="headline-2 text-[var(--pl-5)] mb-6" data-lang-key="main_title"></h1>
+                    <h2 data-lang-key="login_page_title" class="headline-3 text-[var(--pl-5)]"></h2>
+                    <p data-lang-key="login_page_subtitle" class="body-medium text-gray-500 mt-1 mb-6"></p>
+                    <div id="login-error-msg" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md text-sm mb-4 text-center hidden"></div>
+                    <form id="login-form" class="space-y-5 text-left">
+                        <div>
+                            <label for="username" data-lang-key="username_field" class="text-sm font-medium text-gray-700"></label>
+                            <input id="username" name="username" type="text" required class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--pl-6)]">
+                        </div>
+                        <div>
+                            <label for="password" data-lang-key="password_field" class="text-sm font-medium text-gray-700"></label>
+                            <input id="password" name="password" type="password" required class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--pl-6)]">
+                        </div>
+                        <div>
+                            <button id="login-btn" type="submit" class="w-full flex justify-center items-center py-3 px-4 btn-primary">
+                                <span class="btn-text" data-lang-key="login_button"></span>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-6">
+                        <a href="#" class="nav-link text-sm text-gray-600 hover:text-[var(--pl-6)] transition-colors" data-page="landing">&larr; <span data-lang-key="back_to_home"></span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-inicio" class="page">
+             <div class="min-h-[90vh] flex items-center justify-center text-center px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="headline-1 text-[var(--pl-5)] mb-4" data-lang-key="main_title"></h1>
+                    <p id="inicio-school-name" class="body-big text-[var(--pl-5)] font-bold"></p>
+                    <div class="mt-8 flex justify-center">
+                        <a href="#" data-page="analisis" class="nav-link bg-white text-[var(--pl-5)] font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition-all shadow-md" data-lang-key="go_to_platform_button"></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-resumen" class="page">
+             <div id="resumen-container" class="container mx-auto px-4 sm:px-6 py-12">
+                <header class="mb-12 flex justify-between items-center">
+                    <div>
+                        <h1 class="body-big text-[var(--pl-5)] font-bold" data-lang-key="nav_summary"></h1>
+                        <p id="resumen-school-name" class="body-medium text-gray-600 font-semibold"></p>
+                    </div>
+                </header>
+                <div id="resumen-content" class="space-y-12">
+                    </div>
+            </div>
+        </section>
+
+        <section id="page-analisis" class="page analisis-page-bg">
+            <div id="analisis-app" class="flex flex-col lg:flex-row gap-8 p-4 sm:p-6 md:p-12 hidden">
+                <aside class="no-print lg:w-1/4 xl:w-1/5 self-start sticky top-24">
+                    <div class="main-card p-4 h-full flex flex-col">
+                        <h3 class="headline-3 text-sm font-bold uppercase text-gray-500 mb-4 hidden lg:block px-3" data-lang-key="survey_days"></h3>
+                        <nav id="sidebar-nav" class="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-hidden"></nav>
+                    </div>
+                </aside>
+                <div class="flex-grow">
+                    <header class="mb-8 flex justify-between items-center">
+                          <div>
+                                <h1 id="main-title" class="headline-2"></h1>
+                                <p id="dashboard-subtitle" class="body-medium text-gray-600"></p>
+                            </div>
+                            <div id="participants-kpi" class="no-print">
+                                <!-- KPI de participantes será insertado aquí por JS -->
+                            </div>
+                    </header>
+                    <div id="page-content" class="space-y-12"></div>
+                </div>
+            </div>
+            <div id="loader" class="flex justify-center items-center p-12">
+                <div class="text-center">
+                    <div class="w-12 h-12 border-4 border-t-4 border-gray-200 border-solid rounded-full animate-spin border-t-[var(--pl-6)]"></div>
+                    <p class="mt-4 text-gray-500" data-lang-key="loading_data"></p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="page-documentacao" class="page">
+            <div class="container mx-auto px-4 sm:px-6 py-12">
+                <div class="main-card p-8 mb-8 text-center">
+                    <h1 class="headline-1 text-[var(--pl-5)]" data-lang-key="nav_documentation"></h1>
+                    <p class="body-medium text-gray-600 mt-4" data-lang-key="doc_in_development"></p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="page-feedback" class="page">
+            <div class="container mx-auto px-4 sm:px-6 py-12">
+                <header class="text-center mb-12">
+                    <h1 class="headline-1 text-[var(--pl-5)]" data-lang-key="feedback_title"></h1>
+                    <p class="body-medium text-gray-600 mt-2" data-lang-key="feedback_subtitle"></p>
+                </header>
+                <div id="feedback-container" class="max-w-2xl mx-auto">
+                    <div class="main-card p-8">
+                        <div id="feedback-form-content">
+                            </div>
+                        <div id="feedback-success-message" class="hidden text-center py-10">
+                             <div class="mb-4">
+                                <i data-lucide="check-circle-2" class="w-16 h-16 text-green-500 mx-auto"></i>
+                            </div>
+                            <h2 class="headline-2 text-green-600" data-lang-key="feedback_success_title"></h2>
+                            <p class="body-medium text-gray-600 mt-2" data-lang-key="feedback_success_text"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="main-footer" class="bg-[var(--pl-5)] mt-12">
+        <div class="container mx-auto px-6 py-4 text-center text-white/70 body-small">
+            <p>&copy; 2025 Santillana. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ================================================================================= //
+    // 1. DATABASE AND CONFIGURATIONS                                                    //
+    // ================================================================================= //
+    const MOCK_USERS = {
+        'cancun': { password: 'pass', school_id: 'cancun_school', school_name: 'Encuesta de Cancún' }
+    };
+
+    const LANGUAGES = { 
+        'es': { 
+            "lang_name": "Español", "main_title": "Encuesta Cancún",
+            "access_platform": "Acceder a la Plataforma", 
+            "login_page_title": "Portal de Acceso Seguro", "login_page_subtitle": "Ingrese sus credenciales para acceder a su dashboard.", 
+            "username_field": "Nombre de Usuario", "password_field": "Contraseña", "login_button": "Entrar", 
+            "login_error": "Credenciales inválidas. Por favor, intente de nuevo.", "back_to_home": "Volver al inicio", 
+            "nav_home": "Inicio", "nav_summary": "Resumen Ejecutivo", "nav_analysis": "Plataforma de Análisis", "nav_documentation": "Documentación", "logout": "Cerrar Sesión", "nav_feedback": "Feedback",
+            "analysis_for": "Análisis para: ", "go_to_platform_button": "Ir a la Plataforma",
+            "survey_days": "Eventos", "loading_data": "Cargando datos...", "generate_pdf_report": "Generar Reporte PDF", "complete_report": "Reporte Completo de Eventos",
+            "day_questions": "Preguntas del Evento", "comparative_analysis": "Análisis de las respuestas.",
+            "no_charts_to_show": "Sin Gráficos para Mostrar",
+            "doc_in_development": "La documentación detallada para los KPIs y gráficos de esta encuesta está en desarrollo.",
+            "your_school": "Su Escuela",
+            "participants": "Participantes",
+            "feedback_title": "¡Su opinión es importante!", "feedback_subtitle": "Ayúdenos a mejorar. Su feedback es fundamental para la evolución de esta plataforma.", "feedback_rating": "Su calificación general:", "feedback_type": "¿Qué le gustaría hacer?", "feedback_compliment": "Felicitar", "feedback_suggestion": "Sugerir mejora", "feedback_placeholder_compliment": "¡Cuéntenos qué le gustó! Su elogio nos motiva a seguir adelante.", "feedback_placeholder_suggestion": "¿Qué podemos mejorar? Describa su idea para que podamos evaluarla.", "feedback_name": "Su nombre (opcional)", "feedback_email": "Su correo electrónico (opcional)", "feedback_share": "Autorizo la publicación de mi comentario en las redes sociales.", "feedback_submit": "Enviar Feedback", "feedback_success_title": "¡Gracias!", "feedback_success_text": "Su feedback ha sido enviado con éxito. ¡Apreciamos su contribución!",
+            "questions": {
+                "Miércoles 10 sep (tarde)": [
+                    "1.- La participación al evento es mayoritariamente:",
+                    "2.- ¿Cuál es la actitud más observada?",
+                    "3.- ¿Cómo consideras el nivel de participación?"
+                ],
+                "Jueves 11 sep (mañana)": [
+                    "1.- ¿Cómo es la puntualidad de los asistentes al inicio de las actividades?",
+                    "2.- ¿Qué nivel de interés muestran los asistentes hacia los stands?",
+                    "3.- En los recesos, cuando las personas conversan:",
+                    "4.- ¿Qué tan diversa es la interacción entre los asistentes?"
+                ],
+                "Jueves 11 sep (tarde)": [
+                    "1.- ¿Cómo es la interacción entre los participantes durante la comida y momentos de receso?",
+                    "2.- ¿Qué hacen los participantes con las botellas de agua que reciben en el evento?",
+                    "3.- ¿Notas alguna diferencia en el nivel de atención del público entre la primera y la segunda mitad del día?"
+                ]
+            }
+        }, 
+        'pt': { 
+            "lang_name": "Português", "main_title": "Inquérito Cancún",
+            "access_platform": "Acessar a Plataforma", 
+            "login_page_title": "Portal de Acesso Seguro", "login_page_subtitle": "Insira suas credenciais para acessar seu dashboard.", 
+            "username_field": "Nome de Usuário", "password_field": "Senha", "login_button": "Entrar", 
+            "login_error": "Credenciais inválidas. Por favor, tente novamente.", "back_to_home": "Voltar ao início", 
+            "nav_home": "Início", "nav_summary": "Resumo Executivo", "nav_analysis": "Plataforma de Análise", "nav_documentation": "Documentação", "logout": "Sair", "nav_feedback": "Feedback",
+            "analysis_for": "Análise para: ", "go_to_platform_button": "Ir para a Plataforma",
+            "survey_days": "Eventos", "loading_data": "Carregando dados...", "generate_pdf_report": "Gerar Relatório PDF", "complete_report": "Relatório Completo de Eventos",
+            "day_questions": "Perguntas do Evento", "comparative_analysis": "Análise das respostas.",
+            "no_charts_to_show": "Sem Gráficos para Mostrar",
+            "doc_in_development": "A documentação detalhada para os KPIs e gráficos desta pesquisa está em desenvolvimento.",
+            "your_school": "Sua Escola",
+            "participants": "Participantes",
+            "feedback_title": "Sua opinião é importante!", "feedback_subtitle": "Ajude-nos a mejorar. Seu feedback é fundamental para a evolução desta plataforma.", "feedback_rating": "Sua avaliação geral:", "feedback_type": "O que você gostaria de fazer?", "feedback_compliment": "Elogiar", "feedback_suggestion": "Sugerir melhoria", "feedback_placeholder_compliment": "Conte-nos o que você gostou! Seu elogio nos motiva a continuar.", "feedback_placeholder_suggestion": "O que podemos melhorar? Descreva sua ideia para que possamos avaliá-la.", "feedback_name": "Seu nome (opcional)", "feedback_email": "Seu e-mail (opcional)", "feedback_share": "Autorizo a publicação do meu comentário nas redes sociais.", "feedback_submit": "Enviar Feedback", "feedback_success_title": "Obrigado!", "feedback_success_text": "Seu feedback foi enviado com sucesso. Agradecemos sua contribuição!",
+            "questions": {
+                "Miércoles 10 sep (tarde)": [
+                    "1.- A participação no evento é maioritariamente:",
+                    "2.- Qual é a atitude mais observada?",
+                    "3.- Como considera o nível de participação?"
+                ],
+                "Jueves 11 sep (mañana)": [
+                    "1.- Como é a pontualidade dos participantes no início das atividades?",
+                    "2.- Que nível de interesse os participantes demonstram nos stands?",
+                    "3.- Nos intervalos, quando as pessoas conversam:",
+                    "4.- Quão diversa é a interação entre os participantes?"
+                ],
+                "Jueves 11 sep (tarde)": [
+                    "1.- Como é a interação entre os participantes durante a refeição e os intervalos?",
+                    "2.- O que os participantes fazem com as garrafas de água que recebem no evento?",
+                    "3.- Nota alguma diferença no nível de atenção do público entre a primeira e a segunda metade do dia?"
+                ]
+            }
+        } 
+    };
+    const CHART_COLORS = { blue: '#0c4a6e', mint: '#06b6d4', cyan: '#67e8f9', lightMint: '#a5f3fc', indigo: '#1e3a8a', grey: '#9ca3af', blueTransparent: 'rgba(14, 165, 233, 0.2)', textPrimary: '#0c4a6e', textSecondary: '#4b5563', gridColor: '#e5e7eb' };
+    
+    const cancunData = {
+        summary_data: {
+            competencies: {
+                labels: ["Puntualidad", "Interés", "Interacción", "Sostenibilidad", "Participación"],
+                school: [41.7, 33.3, 40, 66.7, 29.4], 
+                average: [50, 45, 55, 60, 40] 
+            }
+        },
+        full_data: {
+            "Miércoles 10 sep (tarde)": {
+                total_participants: 10,
+                questions: [
+                    {
+                        labels: ["Femenina", "Balanceada", "Masculina"],
+                        data: [70.0, 20.0, 10.0],
+                        qtde: [7, 2, 1]
+                    },
+                    {
+                        labels: ["Entusiasmo", "Curiosidad", "Neutralidad"],
+                        data: [50.0, 40.0, 10.0],
+                        qtde: [5, 4, 1]
+                    },
+                    {
+                        labels: ["Medio", "Alto"],
+                        data: [60.0, 40.0],
+                        qtde: [6, 4]
+                    }
+                ]
+            },
+            "Jueves 11 sep (mañana)": {
+                total_participants: 0,
+                questions: [
+                    { labels: [], data: [], qtde: [] }, { labels: [], data: [], qtde: [] }, { labels: [], data: [], qtde: [] }, { labels: [], data: [], qtde: [] }
+                ]
+            },
+            "Jueves 11 sep (tarde)": {
+                total_participants: 0,
+                questions: [
+                    { labels: [], data: [], qtde: [] }, { labels: [], data: [], qtde: [] }, { labels: [], data: [], qtde: [] }
+                ]
+            }
+        }
+    };
+    
+    // ================================================================================= //
+    // 2. APPLICATION STATE & FILTERS                                                    //
+    // ================================================================================= //
+    const appState = { 
+        currentUser: null, 
+        currentPage: 'landing',
+        currentLang: 'es', 
+        charts: [], 
+        activeAnalysis: {}
+    };
+
+    // ================================================================================= //
+    // 3. DOM RENDERING & MANIPULATION LOGIC                                             //
+    // ================================================================================= //
+    const getLangText = (key) => LANGUAGES[appState.currentLang][key] || key;
+
+    const updateUIText = () => {
+        const lang = LANGUAGES[appState.currentLang];
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.dataset.langKey;
+            if (lang[key]) {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = lang[key];
+                } else {
+                    el.innerHTML = lang[key];
+                }
+            }
+        });
+        document.documentElement.lang = appState.currentLang;
+    };
+    
+    const navigateTo = (pageId, anchor = null) => { 
+        if (!pageId) return; 
+
+        if (pageId === 'analisis' && !appState.currentUser) {
+            // For this demo, let's auto-login the 'cancun' user when accessing the platform directly
+            appState.currentUser = MOCK_USERS['cancun'];
+        }
+
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+        const newPage = document.getElementById(`page-${pageId}`); 
+        if (newPage) { 
+            newPage.classList.add('active'); 
+            appState.currentPage = pageId; 
+            window.scrollTo(0, 0); 
+            renderHeader(); 
+            if (pageId === 'analisis') initAnalisisPage(); 
+            if (pageId === 'resumen') renderResumenPage();
+            if (pageId === 'documentacao') updateUIText();
+            if (pageId === 'feedback') renderFeedbackPage();
+            if (pageId === 'inicio' && appState.currentUser) { 
+                document.getElementById('inicio-school-name').textContent = appState.currentUser.school_name; 
+            } 
+        } 
+    };
+    
+    const renderHeader = () => {
+        const header = document.getElementById('main-header');
+        const lang = LANGUAGES[appState.currentLang];
+        let headerHTML = '';
+
+        if (appState.currentUser) { // Authenticated Header
+            const navLinks = [
+                { page: 'analisis', key: 'Encuesta de Cancún' }
+            ];
+            const linksHTML = navLinks.map(link => {
+                const isActive = appState.currentPage === link.page;
+                return `<a href="#" data-page="${link.page}" 
+                           class="nav-link px-4 py-3 rounded-md text-sm font-semibold transition-all duration-200  
+                                ${isActive ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white hover:bg-white/5'}">
+                            ${link.key}
+                        </a>`;
+            }).join('');
+
+            headerHTML = `<div class="container mx-auto px-4 py-2 flex justify-between items-center print:hidden">
+                            <a href="#" data-page="inicio" class="nav-link flex items-center gap-2 text-white font-bold text-lg">
+                                <i data-lucide="bar-chart-3"></i> <span data-lang-key="main_title"></span>
+                            </a>
+                            <nav class="hidden md:flex items-center gap-2">
+                                ${linksHTML}
+                                <a href="#" id="logout-btn" class="ml-4 text-white/60 hover:text-white transition-colors" title="${getLangText('logout')}">
+                                    <i data-lucide="log-out" class="w-6 h-6"></i>
+                                </a>
+                            </nav>
+                            </div>`; 
+        } else { // Public Header
+            headerHTML = `<nav class="container mx-auto px-4 py-2 flex justify-between items-center print:hidden">
+                            <a href="#" data-page="landing" class="nav-link flex items-center gap-2 text-white font-bold text-lg">
+                                <i data-lucide="bar-chart-3"></i> <span data-lang-key="main_title"></span>
+                            </a>
+                            <div class="flex items-center gap-6">
+                                <div class="relative">
+                                    <button id="lang-switcher-btn" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+                                        <i data-lucide="globe" class="w-5 h-5"></i>
+                                        <span class="hidden sm:inline">${lang.lang_name}</span>
+                                    </button>
+                                    <div id="lang-menu" class="absolute right-0 mt-2 w-36 bg-white rounded-md shadow-lg hidden">
+                                        <a href="#" class="lang-switcher block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="es">Español</a>
+                                        <a href="#" class="lang-switcher block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="pt">Português</a>
+                                    </div>
+                                </div>
+                                <a href="#" data-page="analisis" class="nav-link text-white bg-white/10 hover:bg-white/20 transition-colors font-semibold px-4 py-2 rounded-lg" data-lang-key="access_platform"></a>
+                            </div>
+                        </nav>`;
+        }
+        header.innerHTML = headerHTML;
+        lucide.createIcons();
+        updateUIText(); // Ensure nav links get their text
+    };
+
+    // ================================================================================= //
+    // 4. PAGE RENDERING                                                                 //
+    // ================================================================================= //
+    const renderResumenPage = () => {
+        if (!appState.currentUser) return;
+        document.getElementById('resumen-school-name').textContent = appState.currentUser.school_name;
+        const container = document.getElementById('resumen-content');
+        const fullData = cancunData.full_data;
+        const questions = getLangText('questions');
+
+        let summaryHTML = '<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">';
+        let chartIndex = 0;
+
+        for (const sheetName in fullData) {
+            const sheetData = fullData[sheetName];
+            if (sheetData.questions.length > 0 && sheetData.questions[0].data.length > 0) {
+                // Pick the first question of each sheet for the summary
+                const questionText = questions[sheetName][0];
+                summaryHTML += `
+                    <section class="main-card p-6">
+                        <h3 class="headline-3 mb-1">${sheetName}</h3>
+                        <p class="body-medium text-gray-600 mb-4">${questionText}</p>
+                        <div class="h-96"><canvas id="summary-chart-${chartIndex}"></canvas></div>
+                    </section>
+                `;
+                chartIndex++;
+            }
+        }
+
+        summaryHTML += '</div>';
+        container.innerHTML = summaryHTML;
+
+        // Render the charts
+        appState.charts.forEach(c => c.destroy());
+        appState.charts = [];
+        let renderIndex = 0;
+        for (const sheetName in fullData) {
+            const sheetData = fullData[sheetName];
+            if (sheetData.questions.length > 0 && sheetData.questions[0].data.length > 0) {
+                const questionData = sheetData.questions[0];
+                const chart = new Chart(document.getElementById(`summary-chart-${renderIndex}`), {
+                    type: 'doughnut',
+                    data: {
+                        labels: questionData.labels,
+                        datasets: [{
+                            data: questionData.data,
+                            backgroundColor: [CHART_COLORS.blue, CHART_COLORS.lightMint, CHART_COLORS.cyan, CHART_COLORS.indigo, CHART_COLORS.mint, CHART_COLORS.grey],
+                            borderColor: '#fff',
+                            borderWidth: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: CHART_COLORS.textPrimary } },
+                            datalabels: { color: 'white', font: { weight: 'bold' }, formatter: v => v.toFixed(1) + '%' }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+                appState.charts.push(chart);
+                renderIndex++;
+            }
+        }
+        updateUIText();
+        lucide.createIcons();
+    };
+
+
+    // ================================================================================= //
+    // 5. ANALYSIS PAGE & FEEDBACK LOGIC                                                 //
+    // ================================================================================= //
+    class DashboardApp {
+        constructor() { this.fullData = {}; }
+        init() { 
+            document.getElementById('loader').style.display = 'flex'; 
+            document.getElementById('analisis-app').classList.add('hidden'); 
+            this.fullData = cancunData.full_data; 
+            if (Object.keys(this.fullData).length === 0) { 
+                document.getElementById('loader').innerHTML = `<div class="text-center text-red-500 p-8"><p>Error: No hay datos</p></div>`; return; 
+            } 
+            document.getElementById('loader').style.display = 'none'; 
+            document.getElementById('analisis-app').classList.remove('hidden'); 
+            if(!appState.activeAnalysis.sheet) { 
+                appState.activeAnalysis.sheet = Object.keys(this.fullData)[0]; 
+            } 
+            appState.activeAnalysis.school = appState.currentUser.school_name; 
+            this._render(); 
+        }
+        _render() { this._renderSidebar(); this._renderPageContent(); }
+        _renderSidebar() { 
+            const navContainer = document.getElementById('sidebar-nav'); 
+            const activeSheetName = appState.activeAnalysis.sheet; 
+            navContainer.innerHTML = Object.keys(this.fullData).map(sheetName => `
+                <button data-sheet="${sheetName}" 
+                        class="sheet-link w-full text-left font-semibold p-3 rounded-lg transition-all duration-200 body-medium
+                               ${activeSheetName === sheetName ? 'sidebar-link-active' : 'text-[var(--pl-5)] hover:translate-x-1'}">
+                    ${sheetName}
+                </button>`).join(''); 
+        }
+        _renderPageContent() { 
+            document.getElementById('dashboard-subtitle').innerText = `${getLangText('analysis_for')} ${appState.activeAnalysis.sheet}`; 
+            document.getElementById('main-title').innerText = appState.activeAnalysis.school;
+            
+            const kpiContainer = document.getElementById('participants-kpi');
+            const sheetData = this.fullData[appState.activeAnalysis.sheet];
+            const totalParticipants = sheetData.total_participants || 0;
+
+            if (kpiContainer) {
+                if (totalParticipants > 0) {
+                    kpiContainer.innerHTML = `
+                        <div class="main-card p-4 text-center">
+                            <p class="headline-2 text-[var(--pl-5)]">${totalParticipants}</p>
+                            <p class="body-small font-semibold text-gray-500" data-lang-key="participants"></p>
+                        </div>`;
+                } else {
+                     kpiContainer.innerHTML = '';
+                }
+            }
+
+            const pageContent = document.getElementById('page-content'); 
+            pageContent.innerHTML = `
+                <div id="daily-questions-card" class="mb-12 no-print"></div>
+                <div id="charts-grid" class="space-y-8"></div>
+                <div class="no-print pt-12 flex justify-center"><button id="print-btn" class="btn-primary flex items-center gap-2"><i data-lucide="printer"></i> <span data-lang-key="generate_pdf_report"></span></button></div>
+            `; 
+            this._renderDailyQuestions();
+            this._renderCharts(); 
+            updateUIText();
+            lucide.createIcons();
+        }
+        _renderDailyQuestions() {
+            const container = document.getElementById('daily-questions-card'); if (!container) return;
+            const questions = getLangText('questions')[appState.activeAnalysis.sheet] || [];
+
+            const questionsHTML = questions.map((q, i) => `
+                <div class="interactive-question relative cursor-pointer p-4 bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow" data-chart-id="chart-card-${i}">
+                    <div class="flex items-start gap-4">
+                        <i data-lucide="message-square" class="w-5 h-5 text-[var(--pl-6)] mt-1 flex-shrink-0"></i>
+                        <p class="body-medium text-gray-800 font-semibold">${q}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <section class="main-card bg-[var(--pl-5)] h-full">
+                    <div class="p-6 border-b border-white/20">
+                        <h2 class="headline-3 flex items-center gap-3 text-white">
+                            <i data-lucide="help-circle"></i><span data-lang-key="day_questions"></span>
+                        </h2>
+                    </div>
+                    <div class="p-6 space-y-4">${questionsHTML}</div>
+                </section>
+            `;
+        }
+        _renderCharts() { 
+            appState.charts.forEach(c => c.destroy()); 
+            appState.charts = []; 
+            const container = document.getElementById('charts-grid'); if (!container) return;
+            const analyses = this.fullData[appState.activeAnalysis.sheet].questions; 
+            const questions = getLangText('questions')[appState.activeAnalysis.sheet] || [];
+
+            if (!analyses[0] || analyses[0].data.length === 0) {
+                container.innerHTML = `<div class="main-card p-8 text-center">
+                                         <i data-lucide="timer" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+                                         <h3 class="headline-3 text-[var(--pl-5)]">Esperando disparo de la encuesta!</h3>
+                                       </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            if (analyses.length === 0 || questions.length === 0) { 
+                container.innerHTML = `<div class="main-card text-center py-12"><h3 class="headline-3" data-lang-key="no_charts_to_show"></h3></div>`; 
+                return; 
+            } 
+
+            container.innerHTML = analyses.map((analise, i) => `
+                <div id="chart-card-${i}" class="main-card p-6">
+                    <h3 class="headline-3 mb-4">${questions[i]}</h3>
+                    <div class="h-80"><canvas id="chart-${i}"></canvas></div>
+                </div>`).join('');
+
+            analyses.forEach((analise, i) => {
+                const maxDataValue = Math.max(...analise.data);
+                const newChart = new Chart(document.getElementById(`chart-${i}`), { 
+                    type: 'bar', 
+                    data: {
+                        labels: analise.labels, 
+                        datasets: [ 
+                            { label: getLangText('your_school'), data: analise.data, qtde: analise.qtde, backgroundColor: CHART_COLORS.blue, borderRadius: 6, borderSkipped: false }
+                        ] 
+                    }, 
+                    options: { 
+                        indexAxis: 'x', 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        scales: { 
+                            x: { ticks: { color: CHART_COLORS.textPrimary, font: { size: 12 } }, grid: { display: false } },
+                            y: { 
+                                ticks: { color: CHART_COLORS.textSecondary, callback: (v) => v + '%' }, 
+                                grid: { color: CHART_COLORS.gridColor },
+                                suggestedMax: maxDataValue + 15
+                            }
+                        }, 
+                        plugins: { 
+                            legend: { display: false }, 
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                font: { weight: 'bold' },
+                                formatter: (value, context) => {
+                                    const qty = context.dataset.qtde[context.dataIndex];
+                                    const percentage = value.toFixed(1);
+                                    return `${qty} (${percentage}%)`;
+                                },
+                                color: CHART_COLORS.textPrimary
+                            }
+                        } 
+                    }, 
+                    plugins: [ChartDataLabels] 
+                }); 
+                appState.charts.push(newChart); 
+            }); 
+        }
+    }
+
+    const dashboard = new DashboardApp();
+    const initAnalisisPage = () => {
+        if (!appState.currentUser) {
+            navigateTo('login');
+            return;
+        }
+        dashboard.init();
+    };
+
+    // ============================= //
+    // NEW AND IMPROVED PRINT FUNCTION //
+    // ============================= //
+    const prepareAndPrint = () => {
+        const pageContent = document.getElementById('page-content');
+        const originalContentHTML = pageContent.innerHTML;
+        let tempPrintCharts = [];
+
+        let printHeader = document.getElementById('print-header');
+        if (!printHeader) {
+            printHeader = document.createElement('div');
+            printHeader.id = 'print-header';
+            printHeader.className = 'hidden print-only text-center mb-8'; // hidden unless printing
+            document.body.prepend(printHeader); // Add it to the top of the body
+        }
+        
+        printHeader.innerHTML = `
+            <h1 id="print-main-title" class="headline-1">${appState.currentUser.school_name}</h1>
+            <p id="print-subtitle" class="body-big">${getLangText('complete_report')}</p>
+        `;
+
+        let fullReportHTML = '';
+        const allSheets = cancunData.full_data;
+        const allQuestions = getLangText('questions');
+
+        Object.keys(allSheets).forEach(sheetName => {
+            const sheetData = allSheets[sheetName];
+            if(sheetData.questions.some(q => q.data.length > 0)) {
+                fullReportHTML += `<section class="print-section">`;
+                fullReportHTML += `<h2 class="headline-2 mb-4 border-b-2 border-gray-400 pb-2">${sheetName}</h2>`;
+                const questions = allQuestions[sheetName];
+                
+                sheetData.questions.forEach((analise, i) => {
+                    if (analise.data.length > 0) {
+                        const sanitizedSheetName = sheetName.replace(/[^a-zA-Z0-9]/g, '-');
+                        const canvasId = `print-chart-${sanitizedSheetName}-${i}`;
+                        fullReportHTML += `
+                            <div class="main-card p-4 mb-4 print-chart-card">
+                                <h3 class="headline-3 mb-2">${questions[i]}</h3>
+                                <div class="print-chart-container"><canvas id="${canvasId}"></canvas></div>
+                            </div>`;
+                    }
+                });
+                fullReportHTML += `</section>`;
+            }
+        });
+        
+        pageContent.innerHTML = fullReportHTML;
+
+        Object.keys(allSheets).forEach(sheetName => {
+            const sheetData = allSheets[sheetName];
+            sheetData.questions.forEach((analise, i) => {
+                if(analise.data.length > 0) {
+                    const sanitizedSheetName = sheetName.replace(/[^a-zA-Z0-9]/g, '-');
+                    const canvasId = `print-chart-${sanitizedSheetName}-${i}`;
+                    const ctx = document.getElementById(canvasId);
+                    if (!ctx) return;
+
+                    const maxDataValue = Math.max(...analise.data);
+                    const newChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: analise.labels,
+                            datasets: [{ data: analise.data, qtde: analise.qtde, backgroundColor: CHART_COLORS.blue, borderRadius: 6 }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: { duration: 0 }, // Disable animation for printing
+                            scales: {
+                                x: { ticks: { color: '#000', font: { size: 9 } }, grid: { display: false } },
+                                y: { ticks: { color: '#555', callback: (v) => v + '%' }, grid: { color: '#ddd' }, suggestedMax: maxDataValue + 15 }
+                            },
+                            plugins: {
+                                legend: { display: false },
+                                datalabels: { 
+                                    anchor: 'end', 
+                                    align: 'top', 
+                                    font: { weight: 'bold', size: 9 }, 
+                                    formatter: (value, context) => {
+                                        const qty = context.dataset.qtde[context.dataIndex];
+                                        const percentage = value.toFixed(1);
+                                        return `${qty} (${percentage}%)`;
+                                    }, 
+                                    color: '#000' }
+                            }
+                        },
+                        plugins: [ChartDataLabels]
+                    });
+                    tempPrintCharts.push(newChart);
+                }
+            });
+        });
+
+        setTimeout(() => {
+            window.print();
+        }, 500);
+
+        window.onafterprint = () => {
+            tempPrintCharts.forEach(chart => chart.destroy());
+            pageContent.innerHTML = originalContentHTML;
+            dashboard._render();
+            window.onafterprint = null; 
+        };
+    };
+
+    const renderFeedbackPage = () => {
+        const container = document.getElementById('feedback-form-content');
+        container.innerHTML = `
+            <form id="feedback-form">
+                <div class="space-y-6">
+                    <div>
+                        <textarea id="feedback_comment" name="comment" rows="4" required class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--pl-6)]" data-lang-key="feedback_placeholder_suggestion"></textarea>
+                    </div>
+                </div>
+                <div class="mt-8 text-center">
+                    <button type="submit" class="btn-primary w-full md:w-auto">
+                        <span data-lang-key="feedback_submit"></span>
+                    </button>
+                </div>
+            </form>
+        `;
+        updateUIText();
+        lucide.createIcons();
+    };
+
+    // ================================================================================= //
+    // 6. EVENT LISTENERS & INITIALIZATION                                               //
+    // ================================================================================= //
+    document.body.addEventListener('click', (e) => {
+        const navLink = e.target.closest('.nav-link'); if (navLink) { e.preventDefault(); navigateTo(navLink.dataset.page); }
+        
+        const questionCard = e.target.closest('.interactive-question');
+        if (questionCard) {
+            e.preventDefault();
+            const chartId = questionCard.dataset.chartId;
+            const chartElement = document.getElementById(chartId);
+            if (chartElement) {
+                chartElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                chartElement.classList.add('highlight-animation');
+                setTimeout(() => chartElement.classList.remove('highlight-animation'), 2000);
+            }
+        }
+
+        if (e.target.closest('#logout-btn')) { 
+            e.preventDefault(); 
+            appState.currentUser = null;
+            navigateTo('landing');
+        }
+        const sheetLink = e.target.closest('.sheet-link'); if (sheetLink) { appState.activeAnalysis.sheet = sheetLink.dataset.sheet; dashboard._render(); }
+        const langSwitcherBtn = e.target.closest('#lang-switcher-btn'); if (langSwitcherBtn) { document.getElementById('lang-menu').classList.toggle('hidden'); }
+        const langSwitcher = e.target.closest('.lang-switcher'); if (langSwitcher) { e.preventDefault(); appState.currentLang = langSwitcher.dataset.lang; updateUIText(); renderHeader(); navigateTo(appState.currentPage); }
+
+        if (e.target.closest('#print-btn')) {
+            e.preventDefault();
+            prepareAndPrint();
+        }
+    });
+    
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const user = MOCK_USERS[username];
+        if(user && user.password === password) {
+            appState.currentUser = user;
+            navigateTo('inicio');
+        } else {
+            const errorMsg = document.getElementById('login-error-msg');
+            errorMsg.textContent = getLangText('login_error');
+            errorMsg.classList.remove('hidden');
+        }
+    });
+    
+    document.body.addEventListener('submit', (e) => {
+        if (e.target.id === 'feedback-form') {
+            e.preventDefault();
+            document.getElementById('feedback-form-content').classList.add('hidden');
+            const successMsg = document.getElementById('feedback-success-message');
+            successMsg.classList.remove('hidden');
+            lucide.createIcons();
+        }
+    });
+
+    navigateTo('landing');
+});
+</script>
+
+</body>
+</html>
