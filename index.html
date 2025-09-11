@@ -291,16 +291,56 @@
                 </div>
             </div>
         </section>
-
-        <section id="page-resumen" class="page">
-             <div id="resumen-container" class="container mx-auto px-4 sm:px-6 py-12">
-                <header class="mb-12 flex justify-between items-center">
-                    <div>
-                        <h1 class="body-big text-[var(--pl-5)] font-bold" data-lang-key="nav_summary"></h1>
-                        <p id="resumen-school-name" class="body-medium text-gray-600 font-semibold"></p>
-                    </div>
+        
+        <section id="page-resumen-ia" class="page">
+            <div class="container mx-auto px-4 sm:px-6 py-12">
+                <header class="text-center mb-12">
+                    <h1 class="headline-1 text-[var(--pl-5)]" data-lang-key="nav_summary_ia"></h1>
+                    <p class="body-medium text-gray-600 mt-2" data-lang-key="summary_ia_subtitle"></p>
                 </header>
-                <div id="resumen-content" class="space-y-12">
+                <div class="space-y-12">
+                    <!-- Resumen General -->
+                    <div class="main-card p-8">
+                        <h2 class="headline-2 mb-4" data-lang-key="general_summary_title"></h2>
+                        <p class="body-medium" data-lang-key="general_summary_text"></p>
+                    </div>
+
+                    <!-- KPIs -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="main-card p-6 text-center">
+                            <p class="headline-2 text-[var(--pl-1)]" id="kpi-impuntualidad"></p>
+                            <p class="font-semibold" data-lang-key="kpi_punctuality_rate"></p>
+                        </div>
+                        <div class="main-card p-6 text-center">
+                            <p class="headline-2 text-[var(--pl-1)]" id="kpi-atencion"></p>
+                            <p class="font-semibold" data-lang-key="kpi_sustained_attention"></p>
+                        </div>
+                        <div class="main-card p-6 text-center">
+                            <p class="headline-2 text-[var(--pl-1)]" id="kpi-desperdicio"></p>
+                            <p class="font-semibold" data-lang-key="kpi_waste_rate"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <!-- Insights y Correlaciones -->
+                        <div class="main-card p-8">
+                            <h2 class="headline-2 mb-4" data-lang-key="insights_title"></h2>
+                            <ul id="insights-list" class="space-y-4 list-disc list-inside body-medium" data-lang-key="insights_list">
+                            </ul>
+                        </div>
+                        <!-- Gráfico Radar -->
+                        <div class="main-card p-8">
+                             <h2 class="headline-2 mb-4" data-lang-key="radar_chart_title"></h2>
+                             <div class="h-96"><canvas id="summary-radar-chart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <!-- Recomendaciones -->
+                    <div class="main-card p-8">
+                        <h2 class="headline-2 mb-4" data-lang-key="recommendations_title"></h2>
+                        <ul id="recommendations-list" class="space-y-4 list-disc list-inside body-medium" data-lang-key="recommendations_list">
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
@@ -391,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "login_page_title": "Portal de Acceso Seguro", "login_page_subtitle": "Ingrese sus credenciales para acceder a su dashboard.", 
             "username_field": "Nombre de Usuario", "password_field": "Contraseña", "login_button": "Entrar", 
             "login_error": "Credenciales inválidas. Por favor, intente de nuevo.", "back_to_home": "Volver al inicio", 
-            "nav_home": "Inicio", "nav_summary": "Resumen Ejecutivo", "nav_analysis": "Plataforma de Análisis", "nav_documentation": "Documentación", "logout": "Cerrar Sesión", "nav_feedback": "Feedback",
+            "nav_home": "Inicio", "nav_summary_ia": "Análisis en General", "nav_analysis": "Análisis por Evento", "nav_documentation": "Documentación", "logout": "Cerrar Sesión", "nav_feedback": "Feedback",
             "analysis_for": "Análisis para: ", "go_to_platform_button": "Ir a la Plataforma",
             "survey_days": "Eventos", "loading_data": "Cargando datos...", "generate_pdf_report": "Generar Reporte PDF", "complete_report": "Reporte Completo de Eventos",
             "day_questions": "Preguntas del Evento", "comparative_analysis": "Análisis de las respuestas.",
@@ -400,6 +440,27 @@ document.addEventListener('DOMContentLoaded', () => {
             "your_school": "Su Escuela",
             "participants": "Participantes",
             "feedback_title": "¡Su opinión es importante!", "feedback_subtitle": "Ayúdenos a mejorar. Su feedback es fundamental para la evolución de esta plataforma.", "feedback_rating": "Su calificación general:", "feedback_type": "¿Qué le gustaría hacer?", "feedback_compliment": "Felicitar", "feedback_suggestion": "Sugerir mejora", "feedback_placeholder_compliment": "¡Cuéntenos qué le gustó! Su elogio nos motiva a seguir adelante.", "feedback_placeholder_suggestion": "¿Qué podemos mejorar? Describa su idea para que podamos evaluarla.", "feedback_name": "Su nombre (opcional)", "feedback_email": "Su correo electrónico (opcional)", "feedback_share": "Autorizo la publicación de mi comentario en las redes sociales.", "feedback_submit": "Enviar Feedback", "feedback_success_title": "¡Gracias!", "feedback_success_text": "Su feedback ha sido enviado con éxito. ¡Apreciamos su contribución!",
+            "summary_ia_subtitle": "Un análisis profundo de los datos del evento, correlaciones y recomendaciones generadas por IA.",
+            "general_summary_title": "Resumen General del Evento",
+            "general_summary_text": "El evento arrancó con una energía vibrante y un alto nivel de compromiso, especialmente por parte de una audiencia mayoritariamente femenina. Sin embargo, a medida que avanzaba hacia el segundo día, se observó una disminución en la puntualidad y una atención fluctuante, sobre todo en las sesiones de la tarde. A pesar de esto, la interacción social y el networking se mantuvieron como un punto fuerte, aunque el interés en los contenidos formales, como los stands, fue más moderado. Un hallazgo operativo clave fue el desperdicio de botellas de agua, lo que señala una oportunidad de mejora en sostenibilidad.",
+            "kpi_punctuality_rate": "Tasa de Impuntualidad (Día 2)",
+            "kpi_sustained_attention": "Atención Sostenida (Día 2)",
+            "kpi_waste_rate": "Tasa de Desperdicio (Botellas)",
+            "insights_title": "Insights y Correlaciones",
+            "insights_list": [
+                "<b>Energía vs. Duración:</b> El entusiasmo inicial contrasta con la disminución de la puntualidad y la atención en el segundo día, un patrón común en eventos de varios días que afecta principalmente a las sesiones vespertinas.",
+                "<b>Networking Activo:</b> La alta interacción durante los descansos indica que los asistentes valoran enormemente la conexión con sus pares, incluso cuando su enfoque en el programa oficial varía.",
+                "<b>Puntualidad como Predictor:</b> La notable impuntualidad en el segundo día puede ser un indicador temprano de la fluctuación en la atención observada más tarde.",
+                "<b>Oportunidad en Sostenibilidad:</b> El hecho de que más de la mitad de las botellas de agua no se consumieran por completo resalta un área de mejora simple pero impactante en términos de costos y responsabilidad ambiental."
+            ],
+            "radar_chart_title": "Rendimiento General del Evento",
+            "recommendations_title": "Recomendaciones",
+            "recommendations_list": [
+                "<b>Dinamizar las Sesiones de la Tarde:</b> Introducir elementos más interactivos, sesiones más cortas o ponentes de alta energía para combatir la caída de la atención.",
+                "<b>Fomentar la Puntualidad:</b> Implementar incentivos para la llegada temprana el segundo día, como una sesión de apertura atractiva o sorteos.",
+                "<b>Capitalizar el Networking:</b> Formalizar las oportunidades de networking con sesiones estructuradas para maximizar el valor percibido por los asistentes.",
+                "<b>Promover la Sostenibilidad:</b> Reemplazar las botellas de un solo uso con estaciones de recarga de agua para reducir el desperdicio y proyectar una imagen eco-amigable."
+            ],
             "questions": {
                 "Miércoles 10 sep (tarde)": [
                     "1.- La participación al evento es mayoritariamente:",
@@ -425,7 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "login_page_title": "Portal de Acesso Seguro", "login_page_subtitle": "Insira suas credenciais para acessar seu dashboard.", 
             "username_field": "Nome de Usuário", "password_field": "Senha", "login_button": "Entrar", 
             "login_error": "Credenciais inválidas. Por favor, tente novamente.", "back_to_home": "Voltar ao início", 
-            "nav_home": "Início", "nav_summary": "Resumo Executivo", "nav_analysis": "Plataforma de Análise", "nav_documentation": "Documentação", "logout": "Sair", "nav_feedback": "Feedback",
+            "nav_home": "Início", "nav_summary_ia": "Análise Geral", "nav_analysis": "Análise por Evento", "nav_documentation": "Documentação", "logout": "Sair", "nav_feedback": "Feedback",
             "analysis_for": "Análise para: ", "go_to_platform_button": "Ir para a Plataforma",
             "survey_days": "Eventos", "loading_data": "Carregando dados...", "generate_pdf_report": "Gerar Relatório PDF", "complete_report": "Relatório Completo de Eventos",
             "day_questions": "Perguntas do Evento", "comparative_analysis": "Análise das respostas.",
@@ -434,6 +495,27 @@ document.addEventListener('DOMContentLoaded', () => {
             "your_school": "Sua Escola",
             "participants": "Participantes",
             "feedback_title": "Sua opinião é importante!", "feedback_subtitle": "Ajude-nos a mejorar. Seu feedback é fundamental para a evolução desta plataforma.", "feedback_rating": "Sua avaliação geral:", "feedback_type": "O que você gostaria de fazer?", "feedback_compliment": "Elogiar", "feedback_suggestion": "Sugerir melhoria", "feedback_placeholder_compliment": "Conte-nos o que você gostou! Seu elogio nos motiva a continuar.", "feedback_placeholder_suggestion": "O que podemos melhorar? Descreva sua ideia para que possamos avaliá-la.", "feedback_name": "Seu nome (opcional)", "feedback_email": "Seu e-mail (opcional)", "feedback_share": "Autorizo a publicação do meu comentário nas redes sociais.", "feedback_submit": "Enviar Feedback", "feedback_success_title": "Obrigado!", "feedback_success_text": "Seu feedback foi enviado com sucesso. Agradecemos sua contribuição!",
+            "summary_ia_subtitle": "Uma análise profunda dos dados do evento, correlações e recomendações geradas por IA.",
+            "general_summary_title": "Resumo Geral do Evento",
+            "general_summary_text": "O evento começou com uma energia vibrante e um alto nível de engajamento, especialmente de um público majoritariamente feminino. No entanto, à medida que avançava para o segundo dia, notou-se uma queda na pontualidade e uma atenção flutuante, principalmente nas sessões da tarde. Apesar disso, a interação social e o networking permaneceram um ponto forte, embora o interesse em conteúdo formal, como os estandes, tenha sido mais moderado. Uma observação operacional importante foi o desperdício de garrafas de água, indicando uma oportunidade de melhoria na sustentabilidade.",
+            "kpi_punctuality_rate": "Taxa de Atraso (Dia 2)",
+            "kpi_sustained_attention": "Atenção Sustentada (Dia 2)",
+            "kpi_waste_rate": "Taxa de Desperdício (Garrafas)",
+            "insights_title": "Insights e Correlações",
+            "insights_list": [
+                "<b>Energia vs. Duração:</b> O entusiasmo inicial contrasta com a diminuição da pontualidade e da atenção no segundo dia, um padrão comum em eventos de vários dias que afeta principalmente as sessões da tarde.",
+                "<b>Networking Ativo:</b> A alta interação durante os intervalos indica que os participantes valorizam muito a conexão com os colegas, mesmo que seu foco no programa oficial varie.",
+                "<b>Pontualidade como Preditor:</b> A notável falta de pontualidade no segundo dia pode ser um indicador precoce da flutuação na atenção observada mais tarde.",
+                "<b>Oportunidade em Sustentabilidade:</b> O fato de mais da metade das garrafas de água não serem totalmente consumidas destaca uma área de melhoria simples, mas impactante, em termos de custos e responsabilidade ambiental."
+            ],
+            "radar_chart_title": "Desempenho Geral do Evento",
+            "recommendations_title": "Recomendaciones",
+            "recommendations_list": [
+                "<b>Dinamizar as Sessões da Tarde:</b> Introduzir elementos mais interativos, sessões mais curtas ou palestrantes de alta energia para combater a queda de atenção.",
+                "<b>Incentivar a Pontualidade:</b> Implementar incentivos para quem chegar cedo no segundo dia, como uma sessão de abertura atraente ou sorteios.",
+                "<b>Capitalizar o Networking:</b> Formalizar as oportunidades de networking com sessões estruturadas para maximizar o valor percebido pelos participantes.",
+                "<b>Promover a Sustentabilidade:</b> Substituir garrafas descartáveis por estações de recarga de água para reduzir o desperdício e projetar uma imagem ecológica."
+            ],
             "questions": {
                 "Miércoles 10 sep (tarde)": [
                     "1.- A participação no evento é maioritariamente:",
@@ -454,7 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } 
     };
-    const CHART_COLORS = { blue: '#0c4a6e', mint: '#06b6d4', cyan: '#67e8f9', lightMint: '#a5f3fc', indigo: '#1e3a8a', grey: '#9ca3af', blueTransparent: 'rgba(14, 165, 233, 0.2)', textPrimary: '#0c4a6e', textSecondary: '#4b5563', gridColor: '#e5e7eb' };
+    const CHART_COLORS = { blue: '#0c4a6e', mint: '#06b6d4', cyan: '#67e8f9', lightMint: '#a5f3fc', indigo: '#1e3a8a', grey: '#9ca3af', blueTransparent: 'rgba(12, 74, 110, 0.2)', textPrimary: '#0c4a6e', textSecondary: '#4b5563', gridColor: '#e5e7eb' };
     
     const cancunData = {
         summary_data: {
@@ -547,28 +629,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // ================================================================================= //
     // 3. DOM RENDERING & MANIPULATION LOGIC                                             //
     // ================================================================================= //
-    const getLangText = (key) => LANGUAGES[appState.currentLang][key] || key;
-
+    const getLangText = (key) => {
+        const langData = LANGUAGES[appState.currentLang];
+        return langData[key] || key;
+    };
+    
     const updateUIText = () => {
         const lang = LANGUAGES[appState.currentLang];
         document.querySelectorAll('[data-lang-key]').forEach(el => {
             const key = el.dataset.langKey;
-            if (lang[key]) {
-                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                    el.placeholder = lang[key];
-                } else {
-                    el.innerHTML = lang[key];
+            const content = lang[key];
+            if (content) {
+                if (typeof content === 'string') {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = content;
+                    } else {
+                        el.innerHTML = content;
+                    }
+                } else if (Array.isArray(content)) {
+                    // Handle lists for insights and recommendations
+                    el.innerHTML = content.map(item => `<li>${item}</li>`).join('');
                 }
             }
         });
         document.documentElement.lang = appState.currentLang;
     };
-    
+
     const navigateTo = (pageId, anchor = null) => { 
         if (!pageId) return; 
 
-        if (pageId === 'analisis' && !appState.currentUser) {
-            // For this demo, let's auto-login the 'cancun' user when accessing the platform directly
+        if ((pageId === 'analisis' || pageId === 'resumen-ia') && !appState.currentUser) {
             appState.currentUser = MOCK_USERS['cancun'];
         }
 
@@ -580,7 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo(0, 0); 
             renderHeader(); 
             if (pageId === 'analisis') initAnalisisPage(); 
-            if (pageId === 'resumen') renderResumenPage();
+            if (pageId === 'resumen-ia') renderIASummaryPage();
             if (pageId === 'documentacao') updateUIText();
             if (pageId === 'feedback') renderFeedbackPage();
             if (pageId === 'inicio' && appState.currentUser) { 
@@ -596,14 +686,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (appState.currentUser) { // Authenticated Header
             const navLinks = [
-                { page: 'analisis', key: 'Encuesta de Cancún' }
+                { page: 'resumen-ia', key: 'nav_summary_ia' },
+                { page: 'analisis', key: 'nav_analysis' }
             ];
             const linksHTML = navLinks.map(link => {
                 const isActive = appState.currentPage === link.page;
                 return `<a href="#" data-page="${link.page}" 
                                 class="nav-link px-4 py-3 rounded-md text-sm font-semibold transition-all duration-200  
-                                    ${isActive ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white hover:bg-white/5'}">
-                                ${link.key}
+                                    ${isActive ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white hover:bg-white/5'}"
+                                    data-lang-key="${link.key}">
                             </a>`;
             }).join('');
 
@@ -640,76 +731,63 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         header.innerHTML = headerHTML;
         lucide.createIcons();
-        updateUIText(); // Ensure nav links get their text
+        updateUIText(); 
     };
 
     // ================================================================================= //
     // 4. PAGE RENDERING                                                                 //
     // ================================================================================= //
-    const renderResumenPage = () => {
+    const renderIASummaryPage = () => {
         if (!appState.currentUser) return;
-        document.getElementById('resumen-school-name').textContent = appState.currentUser.school_name;
-        const container = document.getElementById('resumen-content');
-        const fullData = cancunData.full_data;
-        const questions = getLangText('questions');
 
-        let summaryHTML = '<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">';
-        let chartIndex = 0;
+        // KPI Calculations
+        document.getElementById('kpi-impuntualidad').textContent = '56%';
+        document.getElementById('kpi-atencion').textContent = '22%';
+        document.getElementById('kpi-desperdicio').textContent = '56%';
 
-        for (const sheetName in fullData) {
-            const sheetData = fullData[sheetName];
-            if (sheetData.questions.length > 0 && sheetData.questions[0].data.length > 0) {
-                // Pick the first question of each sheet for the summary
-                const questionText = questions[sheetName][0];
-                summaryHTML += `
-                    <section class="main-card p-6">
-                        <h3 class="headline-3 mb-1">${sheetName}</h3>
-                        <p class="body-medium text-gray-600 mb-4">${questionText}</p>
-                        <div class="h-96"><canvas id="summary-chart-${chartIndex}"></canvas></div>
-                    </section>
-                `;
-                chartIndex++;
-            }
-        }
-
-        summaryHTML += '</div>';
-        container.innerHTML = summaryHTML;
-
-        // Render the charts
         appState.charts.forEach(c => c.destroy());
         appState.charts = [];
-        let renderIndex = 0;
-        for (const sheetName in fullData) {
-            const sheetData = fullData[sheetName];
-            if (sheetData.questions.length > 0 && sheetData.questions[0].data.length > 0) {
-                const questionData = sheetData.questions[0];
-                const chart = new Chart(document.getElementById(`summary-chart-${renderIndex}`), {
-                    type: 'doughnut',
-                    data: {
-                        labels: questionData.labels,
-                        datasets: [{
-                            data: questionData.data,
-                            backgroundColor: [CHART_COLORS.blue, CHART_COLORS.lightMint, CHART_COLORS.cyan, CHART_COLORS.indigo, CHART_COLORS.mint, CHART_COLORS.grey],
-                            borderColor: '#fff',
-                            borderWidth: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { color: CHART_COLORS.textPrimary } },
-                            datalabels: { color: 'white', font: { weight: 'bold' }, formatter: v => v.toFixed(1) + '%' }
-                        }
-                    },
-                    plugins: [ChartDataLabels]
-                });
-                appState.charts.push(chart);
-                renderIndex++;
+        const ctx = document.getElementById('summary-radar-chart');
+        
+        const radarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Engagement', 'Networking', 'Puntualidad', 'Atención', 'Sostenibilidad'],
+                datasets: [{
+                    label: 'Puntuación del Evento',
+                    data: [80, 75, 44, 50, 44], // Scored out of 100
+                    fill: true,
+                    backgroundColor: CHART_COLORS.blueTransparent,
+                    borderColor: CHART_COLORS.blue,
+                    pointBackgroundColor: CHART_COLORS.blue,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: CHART_COLORS.blue
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: CHART_COLORS.gridColor },
+                        grid: { color: CHART_COLORS.gridColor },
+                        pointLabels: { font: { size: 14 }, color: CHART_COLORS.textPrimary },
+                        ticks: {
+                            backdropColor: 'rgba(255, 255, 255, 0.75)',
+                            color: CHART_COLORS.textSecondary
+                        },
+                        min: 0,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
             }
-        }
+        });
+        appState.charts.push(radarChart);
         updateUIText();
-        lucide.createIcons();
     };
 
 
