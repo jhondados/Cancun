@@ -203,7 +203,7 @@
                         <span className="text-[11px] font-black" style={{ color: hexColor }}>{percentage.toFixed(1)}%</span>
                     </div>
                     {/* Barras con grosor h-4 */}
-                    <div className="h-4 w-full bg-slate-900/80 rounded-full p-0.5 border border-white/5 relative overflow-hidden shadow-inner">
+                    <div className="h-4 w-full bg-slate-800/40 rounded-full p-0.5 border border-white/5 relative overflow-hidden shadow-inner">
                         <div
                             className="h-full rounded-full transition-all duration-1000 ease-out relative"
                             style={{
@@ -255,11 +255,28 @@
             },
             tecnologia: {
                 id: 'tecnologia', title: "Tecnología / IA", icon: "cpu", color: "violet",
-                insight: "Análisis de la comodidad digital y postura hacia la IA.",
+                insight: "Análisis de la comodidad digital, preocupación por pantallas y postura hacia la IA generativa.",
                 items: [
-                    { label: "¿Comodidad con herramientas digitales?", categories: ["Seguro/a", "Bien", "Básico", "Con dificultad", "Evito usarlas"], values: [40.42, 36.16, 17.49, 3.22, 2.72] },
-                    { label: "¿Preocupación por tiempo pantallas?", categories: ["Nivel alto (8-10)", "Nivel medio (4-7)", "Nivel bajo (1-3)"], values: [48.50, 40.69, 10.81] },
-                    { label: "¿Postura uso IA generativa?", categories: ["Uso limitado", "Imprescindible", "Dudas/Riesgos", "Sin opinión", "Me opongo"], values: [51.67, 8.64, 26.14, 6.57, 6.98] }
+                    {
+                        label: "¿Qué tan cómodo/a se siente usando diferentes herramientas digitales para apoyar el aprendizaje de su hijo/a?",
+                        categories: ["Totalmente seguro", "Me desenvuelvo bien", "Básico", "Con dificultad", "Evito usarlas"],
+                        values: [40.42, 36.16, 17.49, 3.22, 2.72]
+                    },
+                    {
+                        label: "¿Qué nivel de preocupación tiene por el tiempo y tipo de uso de pantallas de su hijo/a?",
+                        categories: ["Nivel alto (8–10)", "Nivel medio (4–7)", "Nivel bajo (1–3)"],
+                        values: [48.50, 40.69, 10.81]
+                    },
+                    {
+                        label: "¿Cuál es su postura respecto al uso de IA generativa en el aprendizaje de su hijo/a?",
+                        categories: ["Uso limitado", "Imprescindible", "Dudas", "Sin opinión", "Me opongo"],
+                        values: [51.67, 8.64, 26.14, 6.57, 6.99]
+                    },
+                    {
+                        label: "Siento que el uso de tecnología genera conflictos o tensiones en casa.",
+                        categories: ["Totalmente de acuerdo", "De acuerdo", "Indiferente", "Poco de acuerdo", "Muy en desacuerdo"],
+                        values: [10.55, 32.20, 10.52, 31.46, 15.27]
+                    }
                 ]
             },
             emocional: {
