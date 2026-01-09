@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radiografía de las familias latinoamericanas</title>
+    <title>Radiografía de la familia moderna | Dashboard Premium</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,46 +13,94 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 
-    <!-- Babel for JSX -->
+    <!-- Babel para JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-main: #020617;
+            --accent: #6366f1;
+        }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #020617;
-            color: #e2e8f0;
+            background-color: var(--bg-main);
+            color: #f1f5f9;
             margin: 0;
             overflow-x: hidden;
         }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        ::-webkit-scrollbar-track {
-            background: #020617;
+        .glass-card {
+            background: rgba(30, 41, 59, 0.25);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 10px;
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-8px);
+            background: rgba(30, 41, 59, 0.4);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
+        .chart-path {
+            transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Animations */
-        @keyframes fadeIn {
+        .glow-indigo {
+            filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
+        }
+
+        .glow-amber {
+            filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));
+        }
+
+        .glow-rose {
+            filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.6));
+        }
+
+        .glow-emerald {
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .floating-icon {
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .page-transition {
+            animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUpFade {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(30px);
             }
 
             to {
@@ -61,44 +109,24 @@
             }
         }
 
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-out forwards;
+        .chart-gradient-indigo {
+            background: linear-gradient(90deg, #6366f1 0%, #a855f7 100%);
         }
 
-        @keyframes shimmer {
-            0% {
-                transform: translateX(-100%);
-            }
-
-            100% {
-                transform: translateX(100%);
-            }
+        .chart-gradient-emerald {
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
         }
 
-        .shimmer-effect {
-            position: relative;
-            overflow: hidden;
+        .chart-gradient-rose {
+            background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%);
         }
 
-        .shimmer-effect::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            animation: shimmer 2s infinite;
+        .chart-gradient-amber {
+            background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
         }
 
-        .glass-card {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .sidebar-transition {
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .chart-gradient-violet {
+            background: linear-gradient(90deg, #8b5cf6 0%, #d946ef 100%);
         }
     </style>
 </head>
@@ -107,245 +135,381 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useMemo } = React;
 
-        // --- Helper: Lucide Icon Component ---
-        const Icon = ({ name, size = 20, className = "" }) => {
-            const [svg, setSvg] = useState("");
+        // --- Componentes de Visualización ---
 
-            useEffect(() => {
-                // Lucide uses global object in CDN
-                if (window.lucide) {
-                    const iconData = window.lucide.icons[name];
-                    if (iconData) {
-                        // Create temporary element to get SVG string
-                        const element = document.createElement('div');
-                        const icon = window.lucide.createIcons({
-                            icons: { [name]: iconData },
-                            nameAttr: 'data-lucide'
-                        });
-                        // Simple fallback for CDN usage: 
-                        // We use a simplified SVG generation since createIcons targets DOM
-                    }
-                }
-            }, [name]);
-
-            // In CDN mode, it's easier to use data-lucide attribute on an <i> tag
-            return <i data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
-        };
-
-        // --- Components ---
-
-        const ClusterCard = ({ cluster, percentage, desc, tags, color }) => {
-            const colorClasses = {
-                rose: "bg-rose-500/20 text-rose-400 border-rose-500/30",
-                amber: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-                emerald: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-                indigo: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
+        const DoughnutChart = ({ data, color }) => {
+            const radius = 35;
+            const circumference = 2 * Math.PI * radius;
+            let currentOffset = 0;
+            const colors = {
+                indigo: ['#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe', '#e0e7ff'],
+                amber: ['#f59e0b', '#fbbf24', '#fcd34d', '#fef3c7', '#fffbeb'],
+                rose: ['#f43f5e', '#fb7185', '#fda4af', '#fecdd3', '#fff1f2', '#be123c', '#9f1239', '#881337'],
+                emerald: ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#ecfdf5'],
+                violet: ['#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe', '#ede9fe']
             };
 
+            const maxValue = Math.max(...data.values.map(v => v < 1 ? v * 100 : v)).toFixed(0);
+
             return (
-                <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm hover:bg-slate-900/60 transition-all duration-300 animate-fade-in">
-                    <div className="flex justify-between items-center mb-4">
-                        <h4 className="text-lg font-bold text-white">{cluster}</h4>
-                        <span className={`text-sm font-bold px-3 py-1 rounded-full border ${colorClasses[color]}`}>
-                            {percentage}%
-                        </span>
-                    </div>
-                    <p className="text-slate-400 text-sm mb-4 leading-relaxed">{desc}</p>
-                    <div className="flex flex-wrap gap-2">
-                        {tags.map(tag => (
-                            <span key={tag} className="text-[10px] uppercase tracking-wider font-bold bg-slate-800 text-slate-300 px-2 py-1 rounded">
-                                {tag}
+                <div className="flex flex-col items-center">
+                    <div className="relative w-32 h-32 mb-1">
+                        <svg viewBox="0 0 100 100" className="transform -rotate-90 w-full h-full">
+                            {data.values.map((val, i) => {
+                                const safeVal = val < 1 ? val * 100 : val;
+                                const offset = (safeVal / 100) * circumference;
+                                const strokeOffset = -currentOffset;
+                                currentOffset += offset;
+                                return (
+                                    <circle
+                                        key={i}
+                                        cx="50" cy="50" r={radius}
+                                        fill="transparent"
+                                        stroke={colors[color][i % colors[color].length]}
+                                        strokeWidth="12"
+                                        strokeDasharray={`${offset} ${circumference - offset}`}
+                                        strokeDashoffset={strokeOffset}
+                                        className="transition-all duration-1000 ease-out"
+                                        strokeLinecap="round"
+                                    />
+                                );
+                            })}
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center flex-col">
+                            <span className="text-xl font-black text-white leading-none">
+                                {maxValue}%
                             </span>
-                        ))}
+                        </div>
+                    </div>
+                    {/* Leyenda aclaratoria pequeña */}
+                    <span className="text-[9px] text-slate-500 font-bold uppercase tracking-tight mb-4 opacity-70">
+                        Tendencia principal
+                    </span>
+                </div>
+            );
+        };
+
+        const FancyBar = ({ label, percentage, color, delay }) => {
+            const [w, setW] = useState(0);
+            useEffect(() => { setTimeout(() => setW(percentage), 200 + delay * 100); }, [percentage]);
+
+            return (
+                <div className="group space-y-2">
+                    <div className="flex justify-between items-center px-1">
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter group-hover:text-white transition-colors">
+                            {label}
+                        </span>
+                        <span className={`text-[10px] font-black text-${color}-400`}>{percentage.toFixed(1)}%</span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-800/40 rounded-full p-0.5 border border-white/5 relative overflow-hidden">
+                        <div
+                            className={`h-full rounded-full chart-gradient-${color} transition-all duration-1000 ease-out shadow-lg`}
+                            style={{ width: `${w}%` }}
+                        />
                     </div>
                 </div>
             );
         };
 
-        const Dashboard = () => (
-            <div className="space-y-8 animate-fade-in">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-6">
-                    <div>
-                        <h1 className="text-4xl font-extrabold text-white tracking-tight">Categorías</h1>
-                        <p className="text-slate-400 mt-2 text-lg">Distribución analítica de los pilares de la encuesta familiar.</p>
-                    </div>
-                    <div className="text-xs font-mono text-slate-500 uppercase tracking-widest bg-slate-900 px-3 py-1 rounded-md border border-slate-800">
-                        Muestra Total: 10,214
-                    </div>
-                </div>
+        // --- Datos Mapeados ---
 
-                <div className="mt-8">
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-2">
-                            <i data-lucide="pie-chart" className="text-indigo-400"></i>
-                            <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider">Hallazgos por Segmento</h3>
+        const SECTIONS = {
+            ocio: {
+                id: 'ocio',
+                title: "Hábitos de ocio",
+                icon: "gamepad-2",
+                color: "amber",
+                impact: "Equilibrado",
+                insight: "¿Qué actividades de ocio realiza la familia completa?",
+                items: [
+                    { label: "Ver TV o películas", categories: ["Todos los días", "A menudo", "Ocasionalmente", "Nunca"], values: [16.86, 40.89, 40.46, 1.79] },
+                    { label: "Practicar deportes", categories: ["Todos los días", "A menudo", "Ocasionalmente", "Nunca"], values: [9.56, 34.88, 44.51, 11.05] },
+                    { label: "Leer o actividades culturales", categories: ["Todos los días", "A menudo", "Ocasionalmente", "Nunca"], values: [7.74, 35.09, 49.05, 8.12] },
+                    { label: "Salidas al aire libre", categories: ["Todos los días", "A menudo", "Ocasionalmente", "Nunca"], values: [5.0, 54.86, 38.72, 1.42] }
+                ]
+            },
+            hijos: {
+                id: 'hijos',
+                title: "Relación con los Hijos",
+                icon: "users",
+                color: "emerald",
+                impact: "Vital",
+                insight: "Métricas profundas sobre el conocimiento mutuo, la comunicación y el deseo de conexión en el núcleo familiar.",
+                items: [
+                    {
+                        label: "¿Cómo definirías el tiempo de ocio que pasas con tu hijo?",
+                        categories: ["Me gustaría que fuera más", "Solo ocasional", "Es suficiente", "Prácticamente nada"],
+                        values: [52.31, 23.38, 21.10, 3.22]
+                    },
+                    {
+                        label: "¿Cómo calificaría la calidad de la comunicación con su hijo/a?",
+                        categories: ["Excelente", "Buena", "Regular", "Mala"],
+                        values: [47.41, 39.78, 8.78, 4.03]
+                    },
+                    {
+                        label: "¿Cuánto cree que conoce a su hijo/a en aspectos personales y emocionales?",
+                        categories: ["Estoy al día de todo", "Conozco bien el entorno", "Idea general", "Conozco poco", "Apenas conozco"],
+                        values: [60.47, 28.80, 8.90, 1.60, 0.23]
+                    },
+                    {
+                        label: "¿Cuál de las siguientes situaciones refleja mejor cómo se entera de esos aspectos?",
+                        categories: ["Me lo cuenta espontáneamente", "Le hago preguntas", "Lo deduzco por su comportamiento", "Me entero por terceros", "Respeto su privacidad"],
+                        values: [58.06, 25.23, 13.19, 2.55, 0.98]
+                    }
+                ]
+            },
+            escuela: {
+                id: 'escuela',
+                title: "Percepción del Colegio",
+                icon: "school",
+                color: "indigo",
+                impact: "Seguro",
+                insight: "Evaluación del grado de satisfacción y vínculo institucional con el centro educativo.",
+                items: [
+                    { label: "¿Cuánto de satisfecho globalmente está con su colegio actualmente?", categories: ["Muy alta (9-10)", "Alta (7-8)", "Media baja (5-6)", "Baja (1-4)"], values: [44.87, 39.05, 10.53, 5.54] },
+                    { label: "¿Qué tan fácil le resulta comunicarse con los profesores o tutores?", categories: ["Fácil", "Regular", "Muy difícil"], values: [59.46, 34.50, 6.05] },
+                    { label: "¿Qué tan satisfecho/a está con la información sobre el progreso académico?", categories: ["Muy alta (9-10)", "Alta (7-8)", "Media baja (5-6)", "Baja (1-4)"], values: [47.38, 33.84, 11.11, 7.67] },
+                    { label: "Creo que la escuela promueve un ambiente seguro y respetuoso", categories: ["Totalmente de acuerdo", "Algo de acuerdo", "Indiferente", "Algo en desacuerdo", "Nada de acuerdo"], values: [43.83, 40.67, 6.12, 6.99, 2.38] },
+                    { label: "¿Ha participado en actividades organizadas por la escuela?", categories: ["Sí, siempre", "De manera habitual", "Ocasiones puntuales", "Nunca"], values: [42.58, 25.32, 27.29, 4.81] },
+                    { label: "Nivel de padres que están De Acuerdo con afirmaciones clave", categories: ["Aprendizaje en casa", "Tiempo educación", "Apoyo adecuado", "Familia escuchada", "Ambiente seguro", "Recursos/Orientación", "Sentirse apoyado"], values: [90.50, 81.04, 79.43, 71.51, 84.50, 81.57, 77.30] }
+                ]
+            },
+            tecnologia: {
+                id: 'tecnologia',
+                title: "Tecnología / IA",
+                icon: "cpu",
+                color: "violet",
+                impact: "Prudente",
+                insight: "Análisis de la comodidad digital, preocupación por pantallas y postura hacia la IA generativa.",
+                items: [
+                    { label: "¿Qué tan cómodo/a se siente usando herramientas digitales para apoyar el aprendizaje?", categories: ["Totalmente seguro/a", "Me desenvuelvo bien", "Básico", "Con dificultad", "Evito usarlas"], values: [40.42, 36.16, 17.49, 3.22, 2.72] },
+                    { label: "¿Qué nivel de preocupación tiene por el tiempo y tipo de uso de pantallas de su hijo/a?", categories: ["Nivel alto (8–10)", "Nivel medio (4–7)", "Nivel bajo (1–3)"], values: [48.50, 40.69, 10.81] },
+                    { label: "¿Cuál es su postura respecto al uso de IA generativa en el aprendizaje de su hijo/a?", categories: ["Uso limitado", "Imprescindible", "Dudas/Riesgos", "Sin opinión", "Me opongo totalmente"], values: [51.67, 8.64, 26.14, 6.57, 6.98] }
+                ]
+            },
+            emocional: {
+                id: 'emocional',
+                title: "Aspectos socioemocionales",
+                icon: "heart",
+                color: "rose",
+                impact: "Moderado",
+                insight: "Análisis del clima emocional parental, niveles de estrés y salud emocional de los hijos.",
+                items: [
+                    { label: "¿Qué nivel de estrés tiene el padre/madre?", categories: ["Moderado", "Alto", "Bajo", "Muy alto", "Nada"], values: [45.18, 24.20, 17.85, 7.30, 5.47] },
+                    { label: "¿Su hijo/a ha recibido algún tipo de apoyo psicológico en el último año?", categories: ["No lo ha necesitado", "Sí, fuera de la escuela", "Podría necesitarlo", "Sí, en la escuela"], values: [44.24, 23.72, 20.65, 11.39] },
+                    { label: "¿Qué emoción representa mejor cómo se sienten los padres/madres?", categories: ["Tranquilidad", "Positividad", "Cansancio", "Ansiedad", "Felicidad", "Seguridad", "Tristeza", "Enfado"], values: [29.44, 26.67, 20.87, 7.99, 7.53, 5.58, 1.63, 0.29] },
+                    { label: "¿Cuáles son aquellos temas de la vida de su hijo/a que conoce mejor?", categories: ["Rendimiento escolar", "Relaciones sociales", "Salud emocional", "Hábitos de ocio", "Deseos futuro", "Temas actualidad", "Conflictos familiares", "Sexualidad/Desarrollo"], values: [19.82, 17.49, 16.24, 14.79, 11.51, 9.73, 5.60, 4.83] },
+                    { label: "Nivel de preocupación por aspectos del hijo/a", categories: ["Tecnológico", "Emocional", "Social/Bullying", "Académico", "Valores", "Familiar"], values: [32.74, 30.09, 29.98, 28.50, 25.95, 18.64] }
+                ]
+            }
+        };
+
+        const DashboardOverview = () => (
+            <div className="space-y-12 page-transition">
+                <header className="relative py-12">
+                    <div className="absolute top-0 left-0 w-32 h-1 bg-gradient-to-r from-indigo-500 to-transparent"></div>
+                    <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-6 glow-text leading-tight uppercase">
+                        Radiografía de la <span className="text-indigo-500">familia moderna</span>
+                    </h1>
+                    <p className="text-slate-400 text-xl max-w-4xl font-light leading-relaxed">
+                        Entre el hogar, las pantallas, la IA y la escuela. Análisis dimensional de la familia contemporánea basado en <span className="text-white font-bold italic">10,214 encuestas</span> reales.
+                    </p>
+                </header>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <div className="lg:col-span-8 glass-panel p-10 rounded-[4rem] relative overflow-hidden group">
+                        <div className="absolute -top-20 -right-20 w-80 h-80 bg-indigo-600/10 blur-[100px] rounded-full group-hover:bg-indigo-600/20 transition-all duration-700"></div>
+                        <h3 className="text-2xl font-black text-white mb-12 flex items-center gap-4">
+                            <i data-lucide="layers" className="text-indigo-500"></i> Segmentos de Identidad
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {[
+                                { name: "Familias Sobrecargadas", pc: 35, color: "rose", desc: "Estrés crítico. El digital es analgésico." },
+                                { name: "Familias Conectadas", pc: 30, color: "amber", desc: "Mediación técnica y control activo." },
+                                { name: "Familias Relaxadas", pc: 20, color: "emerald", desc: "Equilibrio analógico estructural." },
+                                { name: "Familias Funcionales", pc: 15, color: "indigo", desc: "Convivencia orgánica sin conflictos." }
+                            ].map((c, i) => (
+                                <div key={i} className="flex items-center gap-6 group/item">
+                                    <div className={`w-16 h-16 shrink-0 rounded-2xl bg-${c.color}-500/10 border border-${c.color}-500/20 flex items-center justify-center text-2xl font-black text-${c.color}-400 group-hover/item:scale-110 transition-transform shadow-lg`}>
+                                        {c.pc}%
+                                    </div>
+                                    <div className="overflow-hidden">
+                                        <h4 className="text-white font-bold tracking-tight">{c.name}</h4>
+                                        <p className="text-[10px] text-slate-500 uppercase font-black leading-tight mt-1">{c.desc}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <ClusterCard
-                                cluster="Los Sobrecargados (C1)"
-                                percentage="35" color="rose"
-                                desc="Niveles críticos de estrés parental. El entorno digital actúa como amortiguador emocional pasivo."
-                                tags={["Estrés Crítico", "Permisividad", "Buffer Digital"]}
-                            />
-                            <ClusterCard
-                                cluster="Gestores Técnicos (C2)"
-                                percentage="30" color="amber"
-                                desc="Alta dependencia de herramientas de control parental. Enfoque en límites temporales."
-                                tags={["Tecno-Solucionismo", "Control App"]}
-                            />
-                            <ClusterCard
-                                cluster="Los Resilientes (C3)"
-                                percentage="20" color="emerald"
-                                desc="Prevalencia de actividades offline de alto valor. Inmunidad estructural ante la hiperconexión."
-                                tags={["Ocio Analógico", "Bienestar Físico"]}
-                            />
-                            <ClusterCard
-                                cluster="Los Híbridos (C4)"
-                                percentage="15" color="indigo"
-                                desc="Convivencia orgánica con la tecnología. Mediación activa y fluidez educativa."
-                                tags={["Integración Natural", "Competencia Digital"]}
-                            />
+                    </div>
+
+                    <div className="lg:col-span-4 flex flex-col gap-6">
+                        <div className="glass-card p-10 rounded-[3rem] text-center border-indigo-500/20 hover:bg-indigo-500/5 transition-colors">
+                            <div className="text-6xl font-black text-white mb-2 tracking-tighter">0.82</div>
+                            <div className="text-[10px] text-indigo-400 font-black uppercase tracking-[0.4em]">Silhouette Score</div>
+                            <p className="text-[10px] text-slate-500 mt-6 leading-relaxed font-bold italic uppercase tracking-widest text-center">Cohesión Científica Óptima</p>
+                        </div>
+                        <div className="glass-card p-10 rounded-[3rem] text-center">
+                            <div className="text-6xl font-black text-white mb-2 tracking-tighter text-indigo-500">78%</div>
+                            <div className="text-[10px] text-slate-500 font-black uppercase tracking-[0.4em]">Varianza Total</div>
                         </div>
                     </div>
                 </div>
             </div>
         );
 
-        const SectionPlaceholder = ({ title, icon, subtitle }) => (
-            <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8 bg-slate-900/30 rounded-3xl border border-dashed border-slate-800 animate-fade-in">
-                <div className="p-5 rounded-full bg-slate-800 text-indigo-400 mb-6 shadow-2xl">
-                    <i data-lucide={icon} style={{ width: 48, height: 48 }}></i>
+        const SectionView = ({ section }) => {
+            const hideImpact = ['ocio', 'hijos', 'escuela', 'tecnologia', 'emocional'].includes(section.id);
+
+            return (
+                <div className="space-y-12 page-transition">
+                    <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-l-8 border-indigo-500 pl-10 mb-16">
+                        <div>
+                            <div className="flex items-center gap-4 text-indigo-400 mb-3">
+                                <i data-lucide={section.icon} size="28"></i>
+                                <span className="text-xs font-black uppercase tracking-[0.5em]">Módulo {section.title}</span>
+                            </div>
+                            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-6 uppercase">{section.title}</h2>
+                            <p className="text-slate-400 text-xl max-w-2xl font-light italic leading-relaxed">"{section.insight}"</p>
+                        </div>
+                    </header>
+
+                    <div className="mt-8">
+                        <h4 className="text-slate-500 text-[10px] font-black uppercase tracking-[0.5em] mb-12 flex items-center gap-6">
+                            <span className="flex-1 h-[1px] bg-slate-800"></span> Desglose de Indicadores <span className="flex-1 h-[1px] bg-slate-800"></span>
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                            {section.items.map((item, idx) => (
+                                <div key={idx} className="glass-card p-8 rounded-[2.5rem] relative overflow-hidden group flex flex-col items-center text-center hover:scale-[1.02] transition-transform">
+                                    <div className="flex justify-between items-center w-full mb-8">
+                                        <h4 className="text-white font-bold text-xs tracking-wide uppercase text-left max-w-[80%] leading-relaxed">{item.label}</h4>
+                                        <div className={`p-2 rounded-xl bg-${section.color}-500/10 text-${section.color}-400 shadow-inner`}>
+                                            <i data-lucide="pie-chart" size="16"></i>
+                                        </div>
+                                    </div>
+
+                                    <DoughnutChart data={item} color={section.color} />
+
+                                    <div className="space-y-4 w-full mt-2">
+                                        {item.categories.map((cat, i) => (
+                                            <FancyBar
+                                                key={cat}
+                                                label={cat}
+                                                percentage={item.values[i] * (item.values[i] < 1 ? 100 : 1)}
+                                                color={section.color}
+                                                delay={i}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
-                <h2 className="text-3xl font-bold text-white mb-3">{title}</h2>
-                <p className="text-slate-400 max-w-lg text-lg leading-relaxed">{subtitle}</p>
-                <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
-                    {[1, 2, 3].map(i => (
-                        <div key={i} className="h-40 bg-slate-800/30 rounded-2xl border border-slate-800 shimmer-effect"></div>
-                    ))}
-                </div>
-            </div>
-        );
+            );
+        };
 
         const App = () => {
             const [activeTab, setActiveTab] = useState('inicio');
             const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-            const menuItems = [
-                { id: 'inicio', label: 'Categorías', icon: 'layout-dashboard' },
-                { id: 'ocio', label: 'Hábitos de ocio', icon: 'gamepad-2', subtitle: 'Análisis detallado de la competencia por la dopamina.' },
-                { id: 'hijos', label: 'Relación con los hijos', icon: 'users', subtitle: 'Modelos de mediación parental y dinámicas afectivas.' },
-                { id: 'escuela', label: 'Relación con la escuela', icon: 'school', subtitle: 'Impacto de la educación formal y digitalización.' },
-                { id: 'tecnologia', label: 'Valoración Tecnología / IA', icon: 'cpu', subtitle: 'Percepción de la IA como tutor familiar.' },
-                { id: 'emocional', label: 'Aspectos socio-emocionales', icon: 'heart', subtitle: 'Salud mental y estrés parental en el ecosistema doméstico.' },
-            ];
-
-            useEffect(() => {
-                // Initialize Lucide icons whenever content changes
-                if (window.lucide) {
-                    window.lucide.createIcons();
-                }
-            }, [activeTab, isSidebarOpen]);
-
-            const activeContent = menuItems.find(item => item.id === activeTab);
+            useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [activeTab, isSidebarOpen]);
 
             return (
-                <div className="min-h-screen bg-[#020617] text-slate-200">
-
-                    {/* Sidebar */}
-                    <aside className={`fixed top-0 left-0 z-50 h-full bg-slate-950 border-r border-slate-800 sidebar-transition ${isSidebarOpen ? 'w-80' : 'w-20'} overflow-hidden shadow-2xl`}>
-                        <div className="p-6 mb-8 flex items-center gap-3 border-b border-slate-900/50">
-                            <div className="min-w-[40px] h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/40">
-                                <i data-lucide="trending-up" className="text-white"></i>
+                <div className="min-h-screen bg-[#020617] text-slate-200 selection:bg-indigo-500/30">
+                    <aside className={`fixed top-0 left-0 z-50 h-full glass-panel border-r-0 transition-all duration-500 ease-in-out ${isSidebarOpen ? 'w-80' : 'w-24'} shadow-2xl overflow-hidden`}>
+                        <div className="p-8 mb-12 flex items-center gap-4 border-b border-white/5 pb-10">
+                            <div className="min-w-[48px] h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-500/40 floating-icon shrink-0">
+                                <i data-lucide="activity" className="text-white w-6 h-6"></i>
                             </div>
                             {isSidebarOpen && (
-                                <div className="flex flex-col animate-fade-in">
-                                    <span className="font-bold text-sm tracking-tight text-white leading-tight">Radiografía de las familias</span>
-                                    <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-widest">Latinoamericanas</span>
+                                <div className="flex flex-col overflow-hidden">
+                                    <span className="font-black text-[11px] tracking-tight text-white uppercase leading-tight">
+                                        Radiografía de la familia moderna:
+                                    </span>
+                                    <span className="text-[9px] text-indigo-400 font-bold uppercase tracking-wider mt-1 leading-tight">
+                                        Entre el hogar, las pantallas, la IA y la escuela.
+                                    </span>
                                 </div>
                             )}
                         </div>
 
-                        <nav className="px-3 space-y-1.5">
-                            {menuItems.map((item) => (
+                        <nav className="px-5 space-y-3">
+                            {[
+                                { id: 'inicio', label: 'Inicio', icon: 'layout-grid' },
+                                { id: 'ocio', label: 'Hábitos de ocio', icon: 'gamepad-2' },
+                                { id: 'hijos', label: 'Relación con los Hijos', icon: 'users' },
+                                { id: 'escuela', label: 'Percepcion del Colegio', icon: 'school' },
+                                { id: 'tecnologia', label: 'Tecnología / IA', icon: 'cpu' },
+                                { id: 'emocional', label: 'Aspectos socioemocionales', icon: 'heart' },
+                            ].map((item) => (
                                 <button
                                     key={item.id}
                                     onClick={() => setActiveTab(item.id)}
-                                    className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 group ${activeTab === item.id
-                                        ? 'bg-indigo-600/10 text-indigo-400 border border-indigo-500/20'
-                                        : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                                    className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all relative group overflow-hidden ${activeTab === item.id ? 'bg-indigo-500/10 text-white border border-white/5 shadow-inner' : 'text-slate-500 hover:text-slate-200 hover:bg-white/5'
                                         }`}
                                 >
-                                    <i data-lucide={item.icon} className={activeTab === item.id ? 'text-indigo-400' : 'group-hover:text-indigo-400 transition-colors'}></i>
-                                    {isSidebarOpen && <span className="text-xs font-bold whitespace-nowrap tracking-wide">{item.label}</span>}
-                                    {activeTab === item.id && isSidebarOpen && (
-                                        <div className="ml-auto w-1.5 h-1.5 bg-indigo-500 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.8)]"></div>
+                                    <i data-lucide={item.icon} className={`w-5 h-5 shrink-0 ${activeTab === item.id ? 'text-indigo-400' : ''}`}></i>
+                                    {isSidebarOpen && (
+                                        <span className={`text-[11px] font-extrabold uppercase tracking-widest ${item.id === 'escuela' ? '-ml-0.5' : ''}`}>
+                                            {item.label}
+                                        </span>
                                     )}
                                 </button>
                             ))}
                         </nav>
                     </aside>
 
-                    {/* Main Content */}
-                    <main className={`sidebar-transition ${isSidebarOpen ? 'pl-80' : 'pl-20'}`}>
-
-                        {/* Header Bar */}
-                        <header className="sticky top-0 z-40 bg-[#020617]/80 backdrop-blur-md border-b border-slate-800/50 px-8 py-5 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <button
-                                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                                    className="p-2 hover:bg-slate-900 rounded-xl text-slate-400 transition-all border border-transparent hover:border-slate-800 active:scale-95"
-                                >
-                                    {isSidebarOpen ? <i data-lucide="x"></i> : <i data-lucide="menu"></i>}
-                                </button>
-                                <div className="h-5 w-[1px] bg-slate-800 hidden md:block"></div>
-                                <span className="text-[10px] text-slate-500 font-mono uppercase tracking-[0.2em] hidden lg:block">
-                                    Proyecto de Radiografía de Familias Latinoamericanas
-                                </span>
-                            </div>
-
+                    <main className={`transition-all duration-500 min-h-screen ${isSidebarOpen ? 'pl-80' : 'pl-24'}`}>
+                        <header className="sticky top-0 z-40 bg-[#020617]/50 backdrop-blur-3xl px-12 py-8 flex items-center justify-between border-b border-white/5">
+                            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-3 bg-slate-900/50 hover:bg-slate-800 rounded-2xl text-slate-400 transition-all active:scale-95 border border-white/5 shadow-lg">
+                                {isSidebarOpen ? <i data-lucide="chevron-left"></i> : <i data-lucide="menu"></i>}
+                            </button>
                             <div className="flex items-center gap-6">
-                                <div className="hidden md:flex items-center gap-2 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-4 py-1.5 rounded-full border border-emerald-500/20">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                    SISTEMA ACTIVO
+                                <div className="text-right hidden sm:block">
+                                    <p className="text-[9px] text-indigo-400 font-black uppercase tracking-[0.5em] mb-1">Estado del Sistema</p>
+                                    <p className="text-xs text-white font-bold uppercase tracking-wider">Mapeo Psicométrico Activo</p>
                                 </div>
-                                <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 cursor-pointer hover:border-indigo-500 transition-all shadow-lg active:scale-90">
-                                    <i data-lucide="users"></i>
+                                <div className="w-12 h-12 rounded-2xl glass-card flex items-center justify-center border-indigo-500/20 shadow-2xl">
+                                    <i data-lucide="database" size="20" className="text-indigo-400"></i>
                                 </div>
                             </div>
                         </header>
 
-                        {/* Page Content */}
-                        <div className="p-8 max-w-7xl mx-auto">
+                        <div className="p-12 max-w-7xl mx-auto">
                             {activeTab === 'inicio' ? (
-                                <Dashboard />
+                                <DashboardOverview />
                             ) : (
-                                <SectionPlaceholder
-                                    title={activeContent.label}
-                                    icon={activeContent.icon}
-                                    subtitle={activeContent.subtitle}
-                                />
+                                <SectionView section={SECTIONS[activeTab]} />
                             )}
                         </div>
 
-                        {/* Footer */}
-                        <footer className="p-12 mt-12 border-t border-slate-900/50">
-                            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-                                <div className="flex items-center gap-2 opacity-50 grayscale hover:grayscale-0 transition-all">
-                                    <i data-lucide="layers" className="text-indigo-400"></i>
-                                    <span className="text-[11px] font-bold uppercase tracking-widest text-white">Radiografía Latam</span>
+                        <footer className="p-20 mt-24 border-t border-white/5 bg-slate-950/50 flex flex-col md:flex-row justify-between items-center gap-10">
+                            <div className="flex flex-col gap-6 items-center md:items-start text-center md:text-left">
+                                <div className="flex items-center gap-4 opacity-90">
+                                    <div className="p-3 bg-indigo-600 rounded-2xl shadow-2xl shadow-indigo-500/20"><i data-lucide="home" className="w-5 h-5 text-white"></i></div>
+                                    <span className="text-3xl font-black tracking-tighter text-white uppercase leading-none">Hogar <span className="text-indigo-500">2026</span></span>
                                 </div>
-                                <p className="text-slate-600 text-[10px] uppercase tracking-[0.3em] font-mono">
-                                    Análisis Psicométrico • Latam 2026
+                                <p className="text-slate-500 text-xs max-w-xs leading-relaxed font-extrabold tracking-tight uppercase">
+                                    Análisis avanzado de la subjetividad doméstica frente a la transformación tecnológica.
                                 </p>
+                            </div>
+                            <div className="grid grid-cols-2 gap-10 text-slate-500 uppercase font-mono text-[10px] tracking-[0.4em] font-black text-center md:text-left">
+                                <div className="flex flex-col gap-3">
+                                    <span className="text-white/20 uppercase tracking-[0.2em] font-bold">Diagnóstico</span>
+                                    <span className="text-indigo-400">Deep Analytics</span>
+                                </div>
+                                <div className="flex flex-col gap-3">
+                                    <span className="text-white/20 uppercase tracking-[0.2em] font-bold">Versión</span>
+                                    <span className="text-indigo-400">v4.2 PRO</span>
+                                </div>
                             </div>
                         </footer>
                     </main>
 
-                    {/* Decorative Background Elements */}
-                    <div className="fixed top-[-15%] left-[-10%] w-[55%] h-[55%] bg-indigo-600/5 blur-[160px] rounded-full pointer-events-none -z-10"></div>
-                    <div className="fixed bottom-[-10%] right-[-5%] w-[45%] h-[45%] bg-violet-600/5 blur-[140px] rounded-full pointer-events-none -z-10"></div>
+                    <div className="fixed top-[-10%] left-[-5%] w-[60%] h-[60%] bg-indigo-600/5 blur-[180px] rounded-full pointer-events-none -z-10 animate-pulse"></div>
+                    <div className="fixed bottom-[-5%] right-[-5%] w-[40%] h-[40%] bg-violet-600/5 blur-[150px] rounded-full pointer-events-none -z-10"></div>
                 </div>
             );
         };
