@@ -36,13 +36,13 @@
         }
 
         .glass-panel {
-            background: rgba(15, 23, 42, 0.4);
+            background: rgba(15, 23, 42, 0.7);
             backdrop-filter: blur(24px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .glass-card {
-            background: rgba(30, 41, 59, 0.25);
+            background: rgba(30, 41, 59, 0.35);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.03);
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
@@ -51,40 +51,67 @@
         .glass-card:hover {
             border-color: rgba(99, 102, 241, 0.4);
             transform: translateY(-8px);
-            background: rgba(30, 41, 59, 0.4);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+            background: rgba(30, 41, 59, 0.5);
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8);
         }
 
-        .chart-path {
-            transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Gradientes para textos de secciones */
+        .text-gradient-indigo {
+            background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-amber {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-rose {
+            background: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-emerald {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-violet {
+            background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         @keyframes float {
             0% {
-                transform: translateY(0px) rotate(0deg);
+                transform: translateY(0px);
             }
 
             50% {
-                transform: translateY(-10px) rotate(1deg);
+                transform: translateY(-15px);
             }
 
             100% {
-                transform: translateY(0px) rotate(0deg);
+                transform: translateY(0px);
             }
         }
 
         .floating-icon {
-            animation: float 5s ease-in-out infinite;
+            animation: float 6s ease-in-out infinite;
         }
 
         .page-transition {
-            animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes slideUpFade {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(40px);
             }
 
             to {
@@ -108,7 +135,6 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
-        // --- Paletas de Colores Sólidos con Alto Contraste ---
         const COLOR_PALETTES = {
             indigo: ['#1e40af', '#3b82f6', '#818cf8', '#bfdbfe', '#4f46e5', '#a5b4fc'],
             amber: ['#b45309', '#f59e0b', '#fbbf24', '#fef3c7', '#fb923c', '#ffedd5'],
@@ -117,74 +143,47 @@
             violet: ['#5b21b6', '#8b5cf6', '#a78bfa', '#ede9fe', '#7c3aed', '#c4b5fd']
         };
 
-        // --- Componentes de Visualización ---
-
         const DoughnutChart = ({ data, color }) => {
             const radius = 35;
             const circumference = 2 * Math.PI * radius;
             const activePalette = COLOR_PALETTES[color] || COLOR_PALETTES.indigo;
-
             const normalizedValues = data.values.map(v => v < 1 ? v * 100 : v);
             const maxValue = Math.max(...normalizedValues);
             const maxIndex = normalizedValues.indexOf(maxValue);
             const winnerLabel = data.categories[maxIndex];
-
             let currentOffset = 0;
 
             return (
-                <div className="flex flex-col items-center w-full">
-                    <div className="relative w-40 h-40 mb-4">
+                <div className="flex flex-col items-center w-full text-center">
+                    <div className="relative w-40 h-40 mb-6">
                         <svg viewBox="0 0 100 100" className="transform -rotate-90 w-full h-full">
-                            {/* Anillo de fondo - Grosor ajustado a 16 */}
-                            <circle
-                                cx="50" cy="50" r={radius}
-                                fill="transparent"
-                                stroke="rgba(255,255,255,0.05)"
-                                strokeWidth="16"
-                            />
+                            <circle cx="50" cy="50" r={radius} fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="16" />
                             {normalizedValues.map((val, i) => {
                                 const segmentLength = (val / 100) * circumference;
                                 const strokeOffset = -currentOffset;
                                 currentOffset += segmentLength;
-
                                 const isWinner = maxValue === val;
-                                const segmentColor = activePalette[i % activePalette.length];
-
                                 return (
                                     <circle
-                                        key={i}
-                                        cx="50" cy="50" r={radius}
-                                        fill="transparent"
-                                        stroke={segmentColor}
+                                        key={i} cx="50" cy="50" r={radius} fill="transparent"
+                                        stroke={activePalette[i % activePalette.length]}
                                         strokeWidth={isWinner ? "15" : "14"}
                                         strokeDasharray={`${segmentLength} ${circumference - segmentLength}`}
                                         strokeDashoffset={strokeOffset}
                                         className="transition-all duration-1000 ease-out"
                                         strokeLinecap="butt"
-                                        style={{
-                                            // Separación sutil
-                                            strokeDasharray: `${segmentLength - 0.7} ${circumference - (segmentLength - 0.7)}`,
-                                            opacity: isWinner ? 1 : 0.7
-                                        }}
+                                        style={{ strokeDasharray: `${segmentLength - 0.7} ${circumference - (segmentLength - 0.7)}`, opacity: isWinner ? 1 : 0.75 }}
                                     />
                                 );
                             })}
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center flex-col">
-                            {/* Número central con tamaño equilibrado */}
-                            <span className="text-2xl font-black text-white leading-none tracking-tighter">
-                                {maxValue.toFixed(1)}%
-                            </span>
+                            <span className="text-3xl font-black text-white leading-none tracking-tighter">{maxValue.toFixed(1)}%</span>
                         </div>
                     </div>
-
-                    {/* Etiqueta "Mayoría" */}
-                    <div className="bg-slate-900/60 border border-white/10 rounded-2xl px-5 py-3 mb-2 w-full max-w-[220px] text-center shadow-lg">
-                        <span className="text-[9px] text-slate-500 font-black uppercase tracking-[0.2em] block mb-1">Mayoría</span>
-                        {/* Texto de la categoría ganadora más grande y destacado */}
-                        <span className="text-[14px] text-white font-black leading-tight block">
-                            {winnerLabel}
-                        </span>
+                    <div className="bg-slate-900/80 border border-white/10 rounded-2xl px-6 py-4 mb-2 w-full max-w-[260px] text-center shadow-xl">
+                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.3em] block mb-2">Mayoría</span>
+                        <span className="text-[15px] text-white font-black leading-tight block">{winnerLabel}</span>
                     </div>
                 </div>
             );
@@ -193,24 +192,14 @@
         const FancyBar = ({ label, percentage, hexColor, delay }) => {
             const [w, setW] = useState(0);
             useEffect(() => { setTimeout(() => setW(percentage), 200 + delay * 100); }, [percentage]);
-
             return (
                 <div className="group space-y-2">
                     <div className="flex justify-between items-center px-1">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide group-hover:text-slate-100 transition-colors">
-                            {label}
-                        </span>
-                        <span className="text-[11px] font-black" style={{ color: hexColor }}>{percentage.toFixed(1)}%</span>
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide group-hover:text-slate-100 transition-colors">{label}</span>
+                        <span className="text-[12px] font-black" style={{ color: hexColor }}>{percentage.toFixed(1)}%</span>
                     </div>
-                    {/* Barras con grosor h-4 */}
-                    <div className="h-4 w-full bg-slate-800/40 rounded-full p-0.5 border border-white/5 relative overflow-hidden shadow-inner">
-                        <div
-                            className="h-full rounded-full transition-all duration-1000 ease-out relative"
-                            style={{
-                                width: `${w}%`,
-                                backgroundColor: hexColor
-                            }}
-                        >
+                    <div className="h-4 w-full bg-slate-900/80 rounded-full p-0.5 border border-white/5 relative overflow-hidden shadow-inner">
+                        <div className="h-full rounded-full transition-all duration-1000 ease-out relative" style={{ width: `${w}%`, backgroundColor: hexColor }}>
                             <div className="bar-inner-glow rounded-full"></div>
                         </div>
                     </div>
@@ -218,11 +207,12 @@
             );
         };
 
-        // --- Estructura de Datos ---
-
         const SECTIONS = {
             ocio: {
-                id: 'ocio', title: "Hábitos de ocio", icon: "gamepad-2", color: "amber",
+                id: 'ocio',
+                titlePrefix: "Hábitos de",
+                titleSuffix: "ocio",
+                icon: "gamepad-2", color: "amber",
                 insight: "¿Qué actividades de ocio realiza la familia completa?",
                 items: [
                     { label: "Ver TV o películas", categories: ["Todos los días", "A menudo", "Ocasionalmente", "Nunca"], values: [16.86, 40.89, 40.46, 1.79] },
@@ -232,7 +222,10 @@
                 ]
             },
             hijos: {
-                id: 'hijos', title: "Relación con los Hijos", icon: "users", color: "emerald",
+                id: 'hijos',
+                titlePrefix: "Relación con los",
+                titleSuffix: "Hijos",
+                icon: "users", color: "emerald",
                 insight: "Evaluación de la dinámica de comunicación y conocimiento personal con los hijos.",
                 items: [
                     { label: "¿Cómo definirías el tiempo de ocio que pasas con tu hijo?", categories: ["Es suficiente", "Me gustaría que fuera más", "Solo ocasional", "Prácticamente nada"], values: [21.10, 52.31, 23.38, 3.22] },
@@ -242,7 +235,10 @@
                 ]
             },
             escuela: {
-                id: 'escuela', title: "Percepción del Colegio", icon: "school", color: "indigo",
+                id: 'escuela',
+                titlePrefix: "Percepción del",
+                titleSuffix: "Colegio",
+                icon: "school", color: "indigo",
                 insight: "Satisfacción institucional y vínculo con el centro educativo.",
                 items: [
                     { label: "¿Satisfecho globalmente con su colegio?", categories: ["Baja (1-4)", "Media baja (5-6)", "Alta (7-8)", "Muy alta (9-10)"], values: [5.54, 10.53, 39.05, 44.87] },
@@ -254,92 +250,68 @@
                 ]
             },
             tecnologia: {
-                id: 'tecnologia', title: "Tecnología / IA", icon: "cpu", color: "violet",
+                id: 'tecnologia',
+                titlePrefix: "Tecnología /",
+                titleSuffix: "IA",
+                icon: "cpu", color: "violet",
                 insight: "Análisis de la comodidad digital, preocupación por pantallas y postura hacia la IA generativa.",
                 items: [
-                    {
-                        label: "¿Qué tan cómodo/a se siente usando diferentes herramientas digitales para apoyar el aprendizaje de su hijo/a?",
-                        categories: ["Totalmente seguro", "Me desenvuelvo bien", "Básico", "Con dificultad", "Evito usarlas"],
-                        values: [40.42, 36.16, 17.49, 3.22, 2.72]
-                    },
-                    {
-                        label: "¿Qué nivel de preocupación tiene por el tiempo y tipo de uso de pantallas de su hijo/a?",
-                        categories: ["Nivel alto (8–10)", "Nivel medio (4–7)", "Nivel bajo (1–3)"],
-                        values: [48.50, 40.69, 10.81]
-                    },
-                    {
-                        label: "¿Cuál es su postura respecto al uso de IA generativa en el aprendizaje de su hijo/a?",
-                        categories: ["Uso limitado", "Imprescindible", "Dudas", "Sin opinión", "Me opongo"],
-                        values: [51.67, 8.64, 26.14, 6.57, 6.99]
-                    },
-                    {
-                        label: "Siento que el uso de tecnología genera conflictos o tensiones en casa.",
-                        categories: ["Totalmente de acuerdo", "De acuerdo", "Indiferente", "Poco de acuerdo", "Muy en desacuerdo"],
-                        values: [10.55, 32.20, 10.52, 31.46, 15.27]
-                    }
+                    { label: "¿Qué tan cómodo/a se siente usando diferentes herramientas digitales?", categories: ["Totalmente seguro", "Me desenvuelvo bien", "Básico", "Con dificultad", "Evito usarlas"], values: [40.42, 36.16, 17.49, 3.22, 2.72] },
+                    { label: "¿Qué nivel de preocupación tiene por el tiempo pantallas?", categories: ["Nivel alto (8–10)", "Nivel medio (4–7)", "Nivel bajo (1–3)"], values: [48.50, 40.69, 10.81] },
+                    { label: "¿Cuál es su postura respecto al uso de IA generativa?", categories: ["Uso limitado", "Imprescindible", "Dudas", "Sin opinión", "Me opongo"], values: [51.67, 8.64, 26.14, 6.57, 6.99] },
+                    { label: "Siento que el uso de tecnología genera conflictos en casa.", categories: ["Totalmente de acuerdo", "De acuerdo", "Indiferente", "Poco de acuerdo", "Muy en desacuerdo"], values: [10.55, 32.20, 10.52, 31.46, 15.27] }
                 ]
             },
             emocional: {
-                id: 'emocional', title: "Aspectos socioemocionales", icon: "heart", color: "rose",
+                id: 'emocional',
+                titlePrefix: "Aspectos",
+                titleSuffix: "socioemocionales",
+                icon: "heart", color: "rose",
                 insight: "Clima emocional parental y salud mental de los hijos.",
                 items: [
-                    { label: "¿Nivel de estrés del padre/madre?", categories: ["Moderado", "Alto", "Bajo", "Muy alto", "Nada"], values: [45.18, 24.20, 17.85, 7.30, 5.47] },
-                    { label: "¿Recibió apoyo psicológico el hijo/a?", categories: ["No lo necesitó", "Fuera escuela", "Podría necesitarlo", "En escuela"], values: [44.24, 23.72, 20.65, 11.39] },
-                    { label: "¿Qué emoción los representa mejor?", categories: ["Tranquilidad", "Positividad", "Cansancio", "Ansiedad", "Felicidad", "Seguridad", "Tristeza", "Enfado"], values: [29.44, 26.67, 20.87, 7.99, 7.53, 5.58, 1.63, 0.29] },
-                    { label: "¿Qué temas del hijo/a conoce mejor?", categories: ["Académico", "Social", "Emocional", "Ocio", "Futuro", "Actualidad", "Conflictos", "Sexualidad"], values: [19.82, 17.49, 16.24, 14.79, 11.51, 9.73, 5.60, 4.83] },
-                    { label: "Nivel de preocupación por el hijo/a", categories: ["Tecnológico", "Emocional", "Social/Bullying", "Académico", "Valores", "Familiar"], values: [32.74, 30.09, 29.98, 28.50, 25.95, 18.64] }
+                    { label: "¿Qué nivel de estrés tiene el padre/madre?", categories: ["Moderado", "Alto", "Bajo", "Muy alto", "Nada"], values: [45.18, 24.20, 17.85, 7.30, 5.47] },
+                    { label: "¿Su hijo/a ha recibido algún tipo de apoyo psicológico?", categories: ["No lo necesitó", "Fuera escuela", "Podría necesitarlo", "En escuela"], values: [44.24, 23.72, 20.65, 11.39] },
+                    { label: "¿Qué emoción representa mejor cómo se sienten los padres?", categories: ["Tranquilidad", "Positividad", "Cansancio", "Ansiedad", "Felicidad", "Seguridad", "Tristeza", "Enfado"], values: [29.44, 26.67, 20.87, 7.99, 7.53, 5.58, 1.63, 0.29] },
+                    { label: "¿Cuáles son aquellos temas de la vida de su hijo que conoce mejor?", categories: ["Académico", "Relaciones sociales", "Salud emocional", "Hábitos ocio", "Proyección futuro", "Actualidad", "Conflictos", "Sexualidad"], values: [19.82, 17.49, 16.24, 14.79, 11.51, 9.73, 5.60, 4.83] },
+                    { label: "Nivel de preocupación por aspectos del hijo/a", categories: ["Tecnológico", "Emocional", "Social/Bullying", "Académico", "Valores", "Familiar"], values: [32.74, 30.09, 29.98, 28.50, 25.95, 18.64] }
                 ]
             }
         };
 
         const SectionView = ({ section }) => {
             const palette = COLOR_PALETTES[section.color] || COLOR_PALETTES.indigo;
-
             return (
-                <div className="space-y-12 page-transition">
-                    <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-l-8 border-indigo-500 pl-10 mb-16">
-                        <div className="max-w-4xl">
-                            <div className="flex items-center gap-4 text-indigo-400 mb-3">
-                                <i data-lucide={section.icon} size="28"></i>
-                                <span className="text-xs font-black uppercase tracking-[0.5em]">Módulo {section.title}</span>
+                <div className="space-y-12 page-transition relative">
+                    {/* Cabecera Fija Restaurada (Grande con Icono al lado) */}
+                    <header className="sticky top-[49px] z-30 -mx-12 px-12 py-12 bg-[#020617]/95 backdrop-blur-3xl border-b border-white/10 shadow-2xl transition-all">
+                        <div className="max-w-7xl mx-auto flex items-center gap-12 border-l-[12px] border-indigo-500 pl-10">
+                            <div className={`p-4 rounded-[2.5rem] bg-${section.color}-500/10 text-${section.color}-400 shrink-0 shadow-2xl floating-icon`}>
+                                <i data-lucide={section.icon} size="56"></i>
                             </div>
-                            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-6 uppercase leading-tight">{section.title}</h2>
-                            <p className="text-slate-400 text-xl font-light italic leading-relaxed">"{section.insight}"</p>
+                            <div>
+                                <h2 className="text-6xl md:text-7xl font-black tracking-tighter uppercase leading-none">
+                                    <span className="text-white">{section.titlePrefix} </span>
+                                    <span className={`text-gradient-${section.color}`}>{section.titleSuffix}</span>
+                                </h2>
+                                <p className="text-slate-400 text-2xl font-light italic mt-6 opacity-90 max-w-4xl leading-relaxed">"{section.insight}"</p>
+                            </div>
                         </div>
                     </header>
 
-                    <div className="mt-8">
-                        <h4 className="text-slate-500 text-[10px] font-black uppercase tracking-[0.5em] mb-12 flex items-center gap-6">
-                            <span className="hidden md:block flex-1 h-[1px] bg-slate-800"></span>
-                            Visualización de Patrones Sólidos
-                            <span className="flex-1 h-[1px] bg-slate-800"></span>
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div className="pt-20">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                             {section.items.map((item, idx) => (
-                                <div key={idx} className="glass-card p-10 rounded-[3.5rem] flex flex-col items-center hover:scale-[1.01] transition-all duration-500 border-white/5 bg-gradient-to-br from-slate-900/70 to-slate-950/50 shadow-2xl">
-                                    <div className="flex justify-between items-start w-full mb-10">
-                                        <h4 className="text-white font-extrabold text-sm tracking-tight uppercase text-left max-w-[85%] leading-snug min-h-[42px] border-l-4 border-indigo-500/40 pl-5">
-                                            {item.label}
-                                        </h4>
-                                        <div className={`p-3 rounded-2xl bg-${section.color}-500/10 text-${section.color}-400 shadow-inner group-hover:scale-110 transition-transform`}>
-                                            <i data-lucide="bar-chart-3" size="20"></i>
-                                        </div>
+                                <div key={idx} className="glass-card p-12 rounded-[5rem] flex flex-col items-center hover:scale-[1.01] transition-all duration-500 border-white/5 bg-gradient-to-br from-slate-900/60 to-slate-950/40 shadow-2xl">
+                                    <div className="flex justify-between items-start w-full mb-12">
+                                        <h4 className="text-white font-black text-xl tracking-tight uppercase text-left max-w-[85%] leading-tight border-l-4 border-indigo-500/40 pl-8">{item.label}</h4>
+                                        <div className={`p-3 rounded-2xl bg-${section.color}-500/10 text-${section.color}-400 shadow-inner group-hover:scale-110 transition-transform`}><i data-lucide="bar-chart-3" size="28"></i></div>
                                     </div>
-
-                                    <div className="w-full flex flex-col lg:flex-row items-center lg:items-start gap-14">
-                                        <div className="shrink-0 flex flex-col items-center">
-                                            <DoughnutChart data={item} color={section.color} />
-                                        </div>
-                                        <div className="flex-1 space-y-7 w-full pt-2">
-                                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-white/10 pb-2 block">Diferenciación de Datos</span>
+                                    <div className="w-full flex flex-col lg:flex-row items-center lg:items-start gap-16">
+                                        <div className="shrink-0"><DoughnutChart data={item} color={section.color} /></div>
+                                        <div className="flex-1 space-y-8 w-full pt-4">
+                                            <span className="text-[12px] font-black text-slate-500 uppercase tracking-[0.4em] border-b border-white/10 pb-4 block">Métricas de Segmentación</span>
                                             {item.categories.map((cat, i) => (
-                                                <FancyBar
-                                                    key={cat}
-                                                    label={cat}
-                                                    percentage={item.values[i] * (item.values[i] < 1 ? 100 : 1)}
-                                                    hexColor={palette[i % palette.length]}
-                                                    delay={i}
-                                                />
+                                                <FancyBar key={cat} label={cat} percentage={item.values[i] * (item.values[i] < 1 ? 100 : 1)} hexColor={palette[i % palette.length]} delay={i} />
                                             ))}
                                         </div>
                                     </div>
@@ -352,52 +324,54 @@
         };
 
         const DashboardOverview = () => (
-            <div className="space-y-12 page-transition">
-                <header className="relative py-12">
-                    <div className="absolute top-0 left-0 w-32 h-1 bg-gradient-to-r from-indigo-500 to-transparent"></div>
-                    <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-6 leading-tight uppercase">
-                        Radiografía de la <span className="text-indigo-500">familia moderna</span>
-                    </h1>
-                    <p className="text-slate-400 text-xl max-w-4xl font-light leading-relaxed">
-                        Análisis dimensional de la familia contemporánea basado en <span className="text-white font-bold italic">10,214 encuestas</span>.
-                    </p>
-                </header>
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <div className="lg:col-span-8 glass-panel p-10 rounded-[4rem] relative overflow-hidden group border-white/5 shadow-2xl">
-                        <div className="absolute -top-20 -right-20 w-80 h-80 bg-indigo-600/10 blur-[100px] rounded-full group-hover:bg-indigo-600/20 transition-all duration-700"></div>
-                        <h3 className="text-2xl font-black text-white mb-12 flex items-center gap-4">
-                            <i data-lucide="layers" className="text-indigo-500"></i> Segmentos de Identidad
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-                            {[
-                                { name: "Familias Sobrecargadas", pc: 35, color: "rose", desc: "Estrés crítico. El digital es analgésico." },
-                                { name: "Familias Conectadas", pc: 30, color: "amber", desc: "Mediación técnica y control activo." },
-                                { name: "Familias Relaxadas", pc: 20, color: "emerald", desc: "Equilibrio analógico estructural." },
-                                { name: "Familias Funcionales", pc: 15, color: "indigo", desc: "Convivencia orgánica sin conflictos." }
-                            ].map((c, i) => (
-                                <div key={i} className="flex items-center gap-6 group/item p-4 rounded-3xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
-                                    <div className={`w-16 h-16 shrink-0 rounded-2xl bg-${c.color}-500/10 border border-${c.color}-500/20 flex items-center justify-center text-2xl font-black text-${c.color}-400 group-hover/item:scale-110 transition-transform shadow-lg`}>
-                                        {c.pc}%
-                                    </div>
-                                    <div className="overflow-hidden">
-                                        <h4 className="text-white font-bold tracking-tight">{c.name}</h4>
-                                        <p className="text-[10px] text-slate-500 uppercase font-black leading-tight mt-1">{c.desc}</p>
-                                    </div>
-                                </div>
-                            ))}
+            <div className="space-y-12 page-transition relative">
+                {/* Cabecera Fija de Inicio Restaurada */}
+                <header className="sticky top-[49px] z-30 -mx-12 px-12 py-12 bg-[#020617]/95 backdrop-blur-3xl border-b border-white/10 shadow-2xl transition-all text-left">
+                    <div className="max-w-7xl mx-auto flex items-center gap-12 border-l-[12px] border-indigo-500 pl-10">
+                        <div className="p-4 rounded-[2.5rem] bg-indigo-500/10 text-indigo-400 shrink-0 shadow-2xl floating-icon">
+                            <i data-lucide="layout-grid" size="56"></i>
+                        </div>
+                        <div>
+                            <h2 className="text-6xl md:text-7xl font-black tracking-tighter uppercase leading-none">
+                                <span className="text-white">Radiografía </span>
+                                <span className="text-indigo-500">Familiar</span>
+                            </h2>
+                            <p className="text-slate-400 text-2xl font-light italic mt-6 opacity-95 leading-relaxed max-w-5xl">
+                                Entre el hogar, las pantallas, la IA y la escuela. Análisis dimensional de la familia contemporánea basado en 10,214 encuestas reales.
+                            </p>
                         </div>
                     </div>
+                </header>
 
-                    <div className="lg:col-span-4 flex flex-col gap-6">
-                        <div className="glass-card p-10 rounded-[3rem] text-center border-indigo-500/20 hover:bg-indigo-500/5 transition-colors shadow-2xl">
-                            <div className="text-6xl font-black text-white mb-2 tracking-tighter">0.82</div>
-                            <div className="text-[10px] text-indigo-400 font-black uppercase tracking-[0.4em]">Silhouette Score</div>
-                            <p className="text-[10px] text-slate-500 mt-6 leading-relaxed font-bold italic uppercase tracking-widest text-center">Cohesión Científica Óptima</p>
+                <div className="pt-20 space-y-20">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                        <div className="lg:col-span-8 glass-panel p-16 rounded-[6rem] relative overflow-hidden group border-white/5 shadow-2xl">
+                            <div className="absolute -top-20 -right-20 w-[40rem] h-[40rem] bg-indigo-600/10 blur-[150px] rounded-full group-hover:bg-indigo-600/20 transition-all duration-1000"></div>
+                            <h3 className="text-4xl font-black text-white mb-20 flex items-center gap-8"><i data-lucide="layers" className="text-indigo-500" size={40}></i> Segmentos de Identidad</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+                                {[
+                                    { name: "Sobrecargadas", pc: 35, color: "rose", desc: "Estrés crítico. El digital es analgésico." },
+                                    { name: "Conectadas", pc: 30, color: "amber", desc: "Mediación técnica y control activo." },
+                                    { name: "Relaxadas", pc: 20, color: "emerald", desc: "Equilibrio analógico estructural." },
+                                    { name: "Funcionales", pc: 15, color: "indigo", desc: "Convivencia orgánica sin conflictos." }
+                                ].map((c, i) => (
+                                    <div key={i} className="flex items-center gap-10 group/item p-8 rounded-[4rem] hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
+                                        <div className={`w-24 h-24 shrink-0 rounded-[2.2rem] bg-${c.color}-500/10 border border-${c.color}-500/20 flex items-center justify-center text-4xl font-black text-${c.color}-400 shadow-2xl group-hover/item:scale-110 transition-transform`}>{c.pc}%</div>
+                                        <div><h4 className="text-white text-2xl font-bold tracking-tight">{c.name}</h4><p className="text-sm text-slate-500 uppercase font-black tracking-widest mt-3 leading-relaxed">{c.desc}</p></div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                        <div className="glass-card p-10 rounded-[3rem] text-center border-white/5 shadow-2xl">
-                            <div className="text-6xl font-black text-white mb-2 tracking-tighter text-indigo-500">78%</div>
-                            <div className="text-[10px] text-slate-500 font-black uppercase tracking-[0.4em]">Varianza Total</div>
+                        <div className="lg:col-span-4 flex flex-col gap-12">
+                            <div className="glass-card p-16 rounded-[5rem] text-center border-indigo-500/20 hover:bg-indigo-500/5 transition-colors shadow-2xl flex flex-col justify-center items-center h-full group">
+                                <div className="text-8xl font-black text-white mb-6 tracking-tighter group-hover:scale-110 transition-transform">0.82</div>
+                                <div className="text-sm text-indigo-400 font-black uppercase tracking-[0.6em]">Silhouette Score</div>
+                                <p className="text-xs text-slate-500 mt-10 leading-relaxed font-bold italic uppercase tracking-[0.4em] px-10 text-center">Cohesión de Segmentación Óptima</p>
+                            </div>
+                            <div className="glass-card p-16 rounded-[5rem] text-center border-white/5 shadow-2xl flex flex-col justify-center items-center h-full group">
+                                <div className="text-8xl font-black text-indigo-500 mb-6 tracking-tighter group-hover:scale-110 transition-transform">78%</div>
+                                <div className="text-sm text-slate-500 font-black uppercase tracking-[0.6em]">Varianza Explicada</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -407,28 +381,22 @@
         const App = () => {
             const [activeTab, setActiveTab] = useState('inicio');
             const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
             useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [activeTab, isSidebarOpen]);
 
             return (
                 <div className="min-h-screen bg-[#020617] text-slate-200 selection:bg-indigo-500/30">
-                    <aside className={`fixed top-0 left-0 z-50 h-full bg-slate-950/95 backdrop-blur-2xl border-r border-white/5 transition-all duration-500 ease-in-out ${isSidebarOpen ? 'w-80' : 'w-24'} shadow-2xl overflow-hidden`}>
-                        <div className="p-8 mb-12 flex items-center gap-4 border-b border-white/5 pb-10">
-                            <div className="min-w-[48px] h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-500/40 floating-icon shrink-0">
-                                <i data-lucide="activity" className="text-white w-6 h-6"></i>
+                    <aside className={`fixed top-0 left-0 z-50 h-full bg-slate-950 border-r border-white/5 transition-all duration-500 ease-in-out ${isSidebarOpen ? 'w-80' : 'w-24'} shadow-2xl overflow-hidden`}>
+                        <div className="p-8 mb-10 flex items-center gap-6 border-b border-white/5 pb-12">
+                            <div className="min-w-[54px] h-[54px] bg-indigo-600 rounded-[1.3rem] flex items-center justify-center shadow-2xl shadow-indigo-500/40 floating-icon shrink-0">
+                                <i data-lucide="activity" className="text-white w-8 h-8"></i>
                             </div>
                             {isSidebarOpen && (
                                 <div className="flex flex-col overflow-hidden">
-                                    <span className="font-black text-[11px] tracking-tight text-white uppercase leading-tight">
-                                        Radiografía de la familia moderna:
-                                    </span>
-                                    <span className="text-[9px] text-indigo-400 font-bold uppercase tracking-wider mt-1 leading-tight text-wrap">
-                                        Entre el hogar, las pantallas, la IA y la escuela.
-                                    </span>
+                                    <span className="font-black text-[14px] tracking-tight text-white uppercase leading-tight">Radiografía familiar</span>
+                                    <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider mt-2 leading-tight">Entre el hogar, las pantallas, la IA y la escuela.</span>
                                 </div>
                             )}
                         </div>
-
                         <nav className="px-5 space-y-3">
                             {[
                                 { id: 'inicio', label: 'Inicio', icon: 'layout-grid' },
@@ -438,68 +406,54 @@
                                 { id: 'tecnologia', label: 'Tecnología / IA', icon: 'cpu' },
                                 { id: 'emocional', label: 'Aspectos socioemocionales', icon: 'heart' },
                             ].map((item) => (
-                                <button
-                                    key={item.id}
-                                    onClick={() => setActiveTab(item.id)}
-                                    className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all relative group overflow-hidden ${activeTab === item.id ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-inner' : 'text-slate-500 hover:text-slate-200 hover:bg-white/5'
-                                        }`}
-                                >
-                                    <i data-lucide={item.icon} className={`w-5 h-5 shrink-0 ${activeTab === item.id ? 'text-indigo-400' : ''}`}></i>
-                                    {isSidebarOpen && <span className="text-[11px] font-extrabold uppercase tracking-widest">{item.label}</span>}
+                                <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full flex items-center gap-6 px-6 py-5 rounded-[1.8rem] transition-all relative group overflow-hidden ${activeTab === item.id ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-inner' : 'text-slate-500 hover:text-slate-200 hover:bg-white/5'}`}>
+                                    <i data-lucide={item.icon} className={`w-6 h-6 shrink-0 ${activeTab === item.id ? 'text-indigo-400' : ''}`}></i>
+                                    {isSidebarOpen && <span className="text-[12px] font-extrabold uppercase tracking-[0.2em] whitespace-nowrap">{item.label}</span>}
                                 </button>
                             ))}
                         </nav>
                     </aside>
 
                     <main className={`transition-all duration-500 min-h-screen ${isSidebarOpen ? 'pl-80' : 'pl-24'}`}>
-                        <header className="sticky top-0 z-40 bg-[#020617]/50 backdrop-blur-3xl px-12 py-8 flex items-center justify-between border-b border-white/5">
-                            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-3 bg-slate-900/50 hover:bg-slate-800 rounded-2xl text-slate-400 transition-all active:scale-95 border border-white/5 shadow-lg">
-                                {isSidebarOpen ? <i data-lucide="chevron-left"></i> : <i data-lucide="menu"></i>}
+                        {/* Barra Superior Minimalista */}
+                        <header className="sticky top-0 z-40 bg-[#020617]/95 backdrop-blur-3xl px-12 py-2 flex items-center justify-between border-b border-white/5">
+                            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-1.5 bg-slate-900/50 hover:bg-slate-800 rounded-lg text-slate-400 transition-all border border-white/5 active:scale-90 shadow-lg">
+                                {isSidebarOpen ? <i data-lucide="chevron-left" size="18"></i> : <i data-lucide="menu" size="18"></i>}
                             </button>
-                            <div className="flex items-center gap-6">
-                                <div className="text-right hidden sm:block text-slate-400 font-mono text-[10px]">
-                                    <p className="uppercase tracking-[0.5em] mb-1">Mapeo Activo</p>
-                                    <p className="text-white font-bold tracking-widest">N=10,214</p>
+                            <div className="flex items-center gap-8">
+                                <div className="text-right hidden sm:block text-slate-400 font-mono text-[9px]">
+                                    <p className="uppercase tracking-[0.5em] mb-0 font-black opacity-60">Sistema de Diagnóstico Psicométrico</p>
+                                    <p className="text-white font-black tracking-[0.3em] leading-none uppercase">Proyecto 2026 • N=10,214</p>
                                 </div>
-                                <div className="w-12 h-12 rounded-2xl glass-card flex items-center justify-center border-indigo-500/20 shadow-2xl">
-                                    <i data-lucide="database" size="20" className="text-indigo-400"></i>
+                                <div className="w-8 h-8 rounded-lg glass-card flex items-center justify-center border-indigo-500/30 shrink-0">
+                                    <i data-lucide="database" size="18" className="text-indigo-400"></i>
                                 </div>
                             </div>
                         </header>
 
-                        <div className="p-12 max-w-7xl mx-auto">
+                        <div className="p-12 max-w-[1700px] mx-auto">
                             {activeTab === 'inicio' ? <DashboardOverview /> : <SectionView section={SECTIONS[activeTab]} />}
                         </div>
 
-                        <footer className="p-20 mt-24 border-t border-white/5 bg-slate-950/50 flex flex-col md:flex-row justify-between items-center gap-10">
-                            <div className="flex flex-col gap-6 items-center md:items-start text-center md:text-left">
-                                <div className="flex items-center gap-4 opacity-90">
-                                    <div className="p-3 bg-indigo-600 rounded-2xl shadow-2xl shadow-indigo-500/20"><i data-lucide="home" className="w-5 h-5 text-white"></i></div>
-                                    <span className="text-3xl font-black tracking-tighter text-white uppercase leading-none">Hogar <span className="text-indigo-500">2026</span></span>
+                        <footer className="p-24 mt-40 border-t border-white/5 bg-slate-950/80 flex flex-col md:flex-row justify-between items-center gap-16">
+                            <div className="flex flex-col gap-10 items-center md:items-start text-center md:text-left">
+                                <div className="flex items-center gap-8 opacity-90 group cursor-default">
+                                    <div className="p-4 bg-indigo-600 rounded-[1.5rem] shadow-2xl shadow-indigo-500/40 transition-transform group-hover:scale-110"><i data-lucide="home" className="w-8 h-8 text-white"></i></div>
+                                    <span className="text-6xl font-black tracking-tighter text-white uppercase leading-none">Hogar <span className="text-indigo-500">2026</span></span>
                                 </div>
-                                <p className="text-slate-500 text-xs max-w-xs leading-relaxed font-extrabold tracking-tight uppercase">
-                                    Análisis avanzado de la subjetividad doméstica frente a la transformación tecnológica.
-                                </p>
+                                <p className="text-slate-500 text-sm max-w-lg leading-relaxed font-bold tracking-tight uppercase opacity-60">Análisis avanzado de la subjetividad doméstica frente a la transformación tecnológica global.</p>
                             </div>
-                            <div className="grid grid-cols-2 gap-10 text-slate-500 uppercase font-mono text-[10px] tracking-[0.4em] font-black text-center md:text-left">
-                                <div className="flex flex-col gap-3">
-                                    <span className="text-white/20 uppercase tracking-[0.2em] font-bold">Diagnóstico</span>
-                                    <span className="text-indigo-400">Deep Analytics</span>
-                                </div>
-                                <div className="flex flex-col gap-3">
-                                    <span className="text-white/20 uppercase tracking-[0.2em] font-bold">Versión</span>
-                                    <span className="text-indigo-400">v4.9 PRO</span>
-                                </div>
+                            <div className="grid grid-cols-2 gap-20 text-slate-500 uppercase font-mono text-[11px] tracking-[0.6em] font-black text-center md:text-left">
+                                <div className="flex flex-col gap-5"><span className="text-white/20 uppercase tracking-[0.2em] font-bold">Diagnóstico</span><span className="text-indigo-400">Deep Analytics</span></div>
+                                <div className="flex flex-col gap-5"><span className="text-white/20 uppercase tracking-[0.2em] font-bold">Versión</span><span className="text-indigo-400">v5.5 ULTIMATE</span></div>
                             </div>
                         </footer>
                     </main>
-
-                    <div className="fixed top-[-10%] left-[-5%] w-[60%] h-[60%] bg-indigo-600/5 blur-[180px] rounded-full pointer-events-none -z-10 animate-pulse"></div>
-                    <div className="fixed bottom-[-5%] right-[-5%] w-[40%] h-[40%] bg-violet-600/5 blur-[150px] rounded-full pointer-events-none -z-10"></div>
+                    <div className="fixed top-[-10%] left-[-5%] w-[70%] h-[70%] bg-indigo-600/5 blur-[200px] rounded-full pointer-events-none -z-10 animate-pulse"></div>
+                    <div className="fixed bottom-[-5%] right-[-5%] w-[50%] h-[50%] bg-violet-600/5 blur-[180px] rounded-full pointer-events-none -z-10"></div>
                 </div>
             );
         };
-
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
