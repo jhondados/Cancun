@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radiografia da Família Moderna | Dashboard Premium</title>
+    <title>Radiografía de la Familia Moderna | Dashboard Premium</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -118,7 +118,6 @@
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Ajuste para evitar que o conteúdo fique atrás dos cabeçalhos fixos ao fazer scroll */
         section {
             scroll-margin-top: 60px;
         }
@@ -167,6 +166,7 @@
                                         strokeWidth={isWinner ? "15" : "14"}
                                         strokeDasharray={`${segmentLength} ${circumference - segmentLength}`}
                                         strokeDashoffset={strokeOffset}
+                                        className="transition-all duration-1000 ease-out"
                                         strokeLinecap="butt"
                                         style={{ strokeDasharray: `${segmentLength - 0.7} ${circumference - (segmentLength - 0.7)}`, opacity: isWinner ? 1 : 0.75 }}
                                     />
@@ -178,7 +178,7 @@
                         </div>
                     </div>
                     <div className="bg-slate-900/80 border border-white/10 rounded-2xl px-4 py-3 md:px-6 md:py-4 mb-2 w-full max-w-[200px] md:max-w-[260px] text-center shadow-xl">
-                        <span className="text-[8px] md:text-[10px] text-slate-500 font-bold uppercase tracking-[0.3em] block mb-1 md:mb-2 leading-none">Maioria</span>
+                        <span className="text-[8px] md:text-[10px] text-slate-500 font-bold uppercase tracking-[0.3em] block mb-1 md:mb-2 leading-none">Mayoría</span>
                         <span className="text-[12px] md:text-[15px] text-white font-black leading-tight block">{winnerLabel}</span>
                     </div>
                 </div>
@@ -203,58 +203,58 @@
             );
         };
 
-        // --- Configuração de Dados ---
+        // --- Configuración de Datos (Traducido) ---
 
         const SECTIONS_DATA = [
             {
-                id: 'ocio', titlePrefix: "Hábitos de", titleSuffix: "lazer", icon: "gamepad-2", color: "amber",
-                insight: "Quais atividades de lazer a família realiza em conjunto?",
+                id: 'ocio', titlePrefix: "Hábitos de", titleSuffix: "ocio", icon: "gamepad-2", color: "amber",
+                insight: "¿Qué actividades de ocio realiza la familia completa?",
                 items: [
-                    { label: "Ver TV ou filmes", categories: ["Todos os dias", "Frequentemente", "Ocasionalmente", "Nunca"], values: [16.86, 40.89, 40.46, 1.79] },
-                    { label: "Praticar esportes", categories: ["Todos los dias", "Frequentemente", "Ocasionalmente", "Nunca"], values: [9.56, 34.88, 44.51, 11.05] },
-                    { label: "Ler ou atividades culturais", categories: ["Todos los dias", "Frequentemente", "Ocasionalmente", "Nunca"], values: [7.74, 35.09, 49.05, 8.12] },
-                    { label: "Passeios ao ar livre", categories: ["Todos los dias", "Frequentemente", "Ocasionalmente", "Nunca"], values: [5.0, 54.86, 38.72, 1.42] }
+                    { label: "Ver TV o películas", categories: ["Todos los días", "A menudo", "Ocasionalmente", "Nunca"], values: [16.86, 40.89, 40.46, 1.79] },
+                    { label: "Practicar deportes", categories: ["Todos los días", "A menudo", "Ocasionalmente", "Nunca"], values: [9.56, 34.88, 44.51, 11.05] },
+                    { label: "Leer o actividades culturales", categories: ["Todos los días", "A menudo", "Ocasionalmente", "Nunca"], values: [7.74, 35.09, 49.05, 8.12] },
+                    { label: "Salidas al aire libre", categories: ["Todos los días", "A menudo", "Ocasionalmente", "Nunca"], values: [5.0, 54.86, 38.72, 1.42] }
                 ]
             },
             {
-                id: 'hijos', titlePrefix: "Relação com os", titleSuffix: "Filhos", icon: "users", color: "emerald",
-                insight: "Avaliação da dinâmica de comunicação e conhecimento pessoal com os filhos.",
+                id: 'hijos', titlePrefix: "Relación con los", titleSuffix: "Hijos", icon: "users", color: "emerald",
+                insight: "Evaluación de la dinámica de comunicación y conocimiento personal con los hijos.",
                 items: [
-                    { label: "Como definiria o tempo de lazer com seu filho?", categories: ["É suficiente", "Gostaria que fosse mais", "Só ocasional", "Praticamente nada"], values: [21.10, 52.31, 23.38, 3.22] },
-                    { label: "Qualidade da comunicação com seu filho/a?", categories: ["Excelente", "Boa", "Regular", "Ruim"], values: [47.41, 39.78, 8.78, 4.03] },
-                    { label: "Quanto conhece emocionalmente seu filho/a?", categories: ["Estou em dia", "Conheço bem", "Ideia geral", "Conohço pouco", "Mal conheço"], values: [60.47, 28.80, 8.90, 1.60, 0.23] }
+                    { label: "¿Cómo definirías el tiempo de ocio que pasas con tu hijo?", categories: ["Es suficiente", "Me gustaría que fuera más", "Solo ocasional", "Prácticamente nada"], values: [21.10, 52.31, 23.38, 3.22] },
+                    { label: "¿Cómo calificaría la calidad de la comunicación con su hijo/a?", categories: ["Excelente", "Buena", "Regular", "Mala"], values: [47.41, 39.78, 8.78, 4.03] },
+                    { label: "¿Cuánto cree que conoce a su hijo/a emocionalmente?", categories: ["Estoy al día de todo", "Conozco bien el entorno", "Idea general", "Conozco poco", "Apenas conozco"], values: [60.47, 28.80, 8.90, 1.60, 0.23] }
                 ]
             },
             {
-                id: 'escuela', titlePrefix: "Percepção da", titleSuffix: "Escola", icon: "school", color: "indigo",
-                insight: "Satisfação institucional e vínculo com o centro educativo.",
+                id: 'escuela', titlePrefix: "Percepción del", titleSuffix: "Colegio", icon: "school", color: "indigo",
+                insight: "Satisfacción institucional y vínculo con el centro educativo.",
                 items: [
-                    { label: "Satisfeito globalmente com a escola?", categories: ["Baixa (1-4)", "Média baixa (5-6)", "Alta (7-8)", "Muito alta (9-10)"], values: [5.54, 10.53, 39.05, 44.87] },
-                    { label: "Comunicação com os professores", categories: ["Fácil", "Regular", "Muito difícil"], values: [59.46, 34.50, 6.05] },
-                    { label: "Satisfeito com informações de progresso?", categories: ["Baixa (1-4)", "Média baixa (5-6)", "Alta (7-8)", "Muito alta (9-10)"], values: [7.67, 11.11, 33.84, 47.38] }
+                    { label: "¿Satisfecho globalmente con su colegio?", categories: ["Baja (1-4)", "Media baja (5-6)", "Alta (7-8)", "Muy alta (9-10)"], values: [5.54, 10.53, 39.05, 44.87] },
+                    { label: "¿Es fácil comunicarse con los profesores?", categories: ["Fácil", "Regular", "Muy difícil"], values: [59.46, 34.50, 6.05] },
+                    { label: "¿Satisfecho con la información de progreso?", categories: ["Baja (1-4)", "Media baja (5-6)", "Alta (7-8)", "Muy alta (9-10)"], values: [7.67, 11.11, 33.84, 47.38] }
                 ]
             },
             {
-                id: 'tecnologia', titlePrefix: "Tecnologia /", titleSuffix: "IA", icon: "cpu", color: "violet",
-                insight: "Análise da fluidez digital, preocupação com telas e postura diante da IA generativa.",
+                id: 'tecnologia', titlePrefix: "Tecnología /", titleSuffix: "IA", icon: "cpu", color: "violet",
+                insight: "Análisis de la fluidez digital, preocupación por pantallas y postura ante la IA generativa.",
                 items: [
-                    { label: "Conforto com ferramentas digitais?", categories: ["Totalmente seguro", "Me viro bem", "Básico", "Com dificuldade", "Evito usar"], values: [40.42, 36.16, 17.49, 3.22, 2.72] },
-                    { label: "Preocupação com tempo de telas?", categories: ["Nível alto (8–10)", "Nível médio (4–7)", "Nível baixo (1–3)"], values: [48.50, 40.69, 10.81] },
-                    { label: "Postura sobre o uso de IA generativa?", categories: ["Uso limitado", "Imprescindível", "Dúvidas", "Sem opinião", "Me oponho"], values: [51.67, 8.64, 26.14, 6.57, 6.99] },
-                    { label: "A tecnologia gera conflitos em casa?", categories: ["Totalmente de acordo", "De acordo", "Indiferente", "Poco de acordo", "Muy desacordo"], values: [10.55, 32.20, 10.52, 31.46, 15.27] }
+                    { label: "¿Qué tan cómodo/a se siente usando herramientas digitales?", categories: ["Totalmente seguro/a", "Me desenvuelvo bien", "Básico", "Con dificultad", "Evito usarlas"], values: [40.42, 36.16, 17.49, 3.22, 2.72] },
+                    { label: "¿Preocupación por el tiempo de pantallas?", categories: ["Nivel alto (8–10)", "Nivel medio (4–7)", "Nivel bajo (1–3)"], values: [48.50, 40.69, 10.81] },
+                    { label: "¿Postura sobre el uso de IA generativa?", categories: ["Uso limitado", "Imprescindible", "Dudas", "Sin opinión", "Me opongo"], values: [51.67, 8.64, 26.14, 6.57, 6.99] },
+                    { label: "¿Siente que la tecnología genera conflictos en casa?", categories: ["Totalmente de acuerdo", "De acuerdo", "Indiferente", "Poco de acuerdo", "Muy en desacuerdo"], values: [10.55, 32.20, 10.52, 31.46, 15.27] }
                 ]
             },
             {
-                id: 'emocional', titlePrefix: "Aspectos", titleSuffix: "socioemocionais", icon: "heart", color: "rose",
-                insight: "Clima emocional parental e saúde mental dos filhos.",
+                id: 'emocional', titlePrefix: "Aspectos", titleSuffix: "socioemocionales", icon: "heart", color: "rose",
+                insight: "Clima emocional parental y salud mental de los hijos.",
                 items: [
-                    { label: "Nível de estresse do pai/mãe?", categories: ["Moderado", "Alto", "Baixo", "Muito alto", "Nada"], values: [45.18, 24.20, 17.85, 7.30, 5.47] },
-                    { label: "Temas que conhece melhor do filho/a", categories: ["Acadêmico", "Social", "Emocional", "Lazer", "Futuro", "Atualidades", "Conflitos", "Sexualidade"], values: [19.82, 17.49, 16.24, 14.79, 11.51, 9.73, 5.60, 4.83] }
+                    { label: "¿Cuál es el nivel de estrés del padre/madre?", categories: ["Moderado", "Alto", "Bajo", "Muy alto", "Nada"], values: [45.18, 24.20, 17.85, 7.30, 5.47] },
+                    { label: "¿Qué temas conoce mejor de la vida de su hijo/a?", categories: ["Académico", "Social", "Emocional", "Ocio", "Futuro", "Actualidades", "Conflictos", "Sexualidad"], values: [19.82, 17.49, 16.24, 14.79, 11.51, 9.73, 5.60, 4.83] }
                 ]
             }
         ];
 
-        // --- Sub-componentes de Visualização ---
+        // --- Sub-componentes de Visualización ---
 
         const SectionComponent = ({ section }) => {
             const palette = COLOR_PALETTES[section.color] || COLOR_PALETTES.indigo;
@@ -292,7 +292,7 @@
                                 <div className="w-full flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-16">
                                     <div className="shrink-0"><DoughnutChart data={item} color={section.color} /></div>
                                     <div className="flex-1 space-y-5 md:space-y-8 w-full pt-2">
-                                        <span className="text-[10px] md:text-[12px] font-black text-slate-500 uppercase tracking-[0.4em] border-b border-white/10 pb-3 md:pb-4 block">Resultados Detalhados</span>
+                                        <span className="text-[10px] md:text-[12px] font-black text-slate-500 uppercase tracking-[0.4em] border-b border-white/10 pb-3 md:pb-4 block">Resultados Detallados</span>
                                         {item.categories.map((cat, i) => (
                                             <FancyBar key={cat} label={cat} percentage={item.values[i] * (item.values[i] < 1 ? 100 : 1)} hexColor={palette[i % palette.length]} delay={i} />
                                         ))}
@@ -315,16 +315,16 @@
                                     <i data-lucide="layout-grid" className="w-6 h-6 md:w-8 md:h-8"></i>
                                 </div>
                                 <span className="text-[9px] md:text-[11px] font-black text-indigo-400 uppercase tracking-[0.5em] bg-indigo-500/5 px-4 py-1.5 rounded-full border border-indigo-500/20">
-                                    Módulo Geral
+                                    Módulo General
                                 </span>
                             </div>
                             <div>
                                 <h2 className="text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter uppercase leading-none">
-                                    <span className="text-white">Radiografia </span>
+                                    <span className="text-white">Radiografía </span>
                                     <span className="text-indigo-500">Familiar</span>
                                 </h2>
                                 <p className="text-slate-400 text-sm md:text-2xl font-light italic mt-3 md:mt-6 opacity-95 leading-relaxed max-w-5xl">
-                                    Análise dimensional baseada em 10.214 famílias. Lar, telas, IA e escola em foco absoluto para o futuro doméstico.
+                                    Análisis dimensional basado en 10,214 familias. Hogar, pantallas, IA y escuela en foco absoluto para el futuro doméstico.
                                 </p>
                             </div>
                         </div>
@@ -336,14 +336,14 @@
                         <div className="lg:col-span-8 glass-panel p-8 md:p-16 rounded-[3rem] md:rounded-[6rem] relative overflow-hidden group border-white/5 shadow-2xl flex flex-col">
                             <div className="absolute -top-20 -right-20 w-[40rem] h-[40rem] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none transition-all duration-1000 group-hover:bg-indigo-600/20"></div>
                             <h3 className="text-2xl md:text-4xl font-black text-white mb-12 md:mb-20 flex items-center gap-4 md:gap-8 relative z-10">
-                                <i data-lucide="layers" className="text-indigo-500" size={32}></i> Segmentos de Identidade
+                                <i data-lucide="layers" className="text-indigo-500" size={32}></i> Segmentos de Identidad
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative z-10">
                                 {[
-                                    { name: "Sobrecargadas", pc: 35, color: "rose", desc: "Níveis críticos de estresse parental e digital passivo." },
-                                    { name: "Conectadas", pc: 30, color: "amber", desc: "Gestão ativa de ferramentas e controle parental." },
-                                    { name: "Resilientes", pc: 20, color: "emerald", desc: "Forte base analógica e atividades offline." },
-                                    { name: "Híbridas", pc: 15, color: "indigo", desc: "Fluidez digital e convivência orgânica tecnológica." }
+                                    { name: "Sobrecargadas", pc: 35, color: "rose", desc: "Niveles críticos de estrés parental y digital pasivo." },
+                                    { name: "Conectadas", pc: 30, color: "amber", desc: "Gestión activa de herramientas y control parental." },
+                                    { name: "Resilientes", pc: 20, color: "emerald", desc: "Fuerte base analógica y actividades offline." },
+                                    { name: "Híbridas", pc: 15, color: "indigo", desc: "Fluidez digital y convivencia orgánica tecnológica." }
                                 ].map((c, i) => (
                                     <div key={i} className="flex items-center gap-6 md:gap-10 group/item transition-all p-2 rounded-3xl">
                                         <div className={`w-16 h-16 md:w-24 md:h-24 shrink-0 rounded-[1.5rem] md:rounded-[2.2rem] bg-${c.color}-500/10 border border-${c.color}-500/20 flex items-center justify-center text-2xl md:text-4xl font-black text-${c.color}-400 shadow-2xl group-hover/item:scale-110 transition-transform`}>{c.pc}%</div>
@@ -356,7 +356,7 @@
                             <div className="glass-card p-10 md:p-16 rounded-[3rem] md:rounded-[5rem] text-center border-indigo-500/20 flex flex-col justify-center items-center flex-1 shadow-2xl group">
                                 <div className="text-6xl md:text-8xl font-black text-white mb-4 tracking-tighter group-hover:scale-110 transition-transform">0.82</div>
                                 <div className="text-xs md:text-sm text-indigo-400 font-black uppercase tracking-[0.6em]">Silhouette Score</div>
-                                <p className="text-[9px] md:text-xs text-slate-500 mt-6 md:mt-10 leading-relaxed font-bold italic uppercase tracking-[0.4em] px-4 md:px-10">Coesão de Segmentação Óptima</p>
+                                <p className="text-[9px] md:text-xs text-slate-500 mt-6 md:mt-10 leading-relaxed font-bold italic uppercase tracking-[0.4em] px-4 md:px-10">Cohesión de Segmentación Óptima</p>
                             </div>
                             <div className="glass-card p-10 md:p-16 rounded-[3rem] md:rounded-[5rem] text-center border-white/5 flex flex-col justify-center items-center flex-1 shadow-2xl group">
                                 <div className="text-6xl md:text-8xl font-black text-indigo-500 mb-4 tracking-tighter group-hover:scale-110 transition-transform">78%</div>
@@ -374,20 +374,19 @@
             const [activeSection, setActiveSection] = useState('inicio');
             const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-            // Menu lateral Items
+            // Menu lateral Items (Traducido)
             const menuItems = [
-                { id: 'inicio', label: 'Início', icon: 'layout-grid' },
-                { id: 'ocio', label: 'Hábitos de Lazer', icon: 'gamepad-2' },
-                { id: 'hijos', label: 'Relação Filhos', icon: 'users' },
-                { id: 'escuela', label: 'Escola', icon: 'school' },
-                { id: 'tecnologia', label: 'Tecnologia / IA', icon: 'cpu' },
+                { id: 'inicio', label: 'Inicio', icon: 'layout-grid' },
+                { id: 'ocio', label: 'Hábitos de Ocio', icon: 'gamepad-2' },
+                { id: 'hijos', label: 'Relación Hijos', icon: 'users' },
+                { id: 'escuela', label: 'Colegio', icon: 'school' },
+                { id: 'tecnologia', label: 'Tecnología / IA', icon: 'cpu' },
                 { id: 'emocional', label: 'Socioemocional', icon: 'heart' },
             ];
 
             useEffect(() => {
                 if (window.lucide) window.lucide.createIcons();
 
-                // Lógica de ScrollSpy para detetar qual seção está visível
                 const handleScroll = () => {
                     const scrollPosition = window.scrollY + 200;
                     const sections = ['inicio', ...SECTIONS_DATA.map(s => s.id)];
@@ -433,8 +432,8 @@
                                 <i data-lucide="activity" className="text-white w-7 h-7"></i>
                             </div>
                             <div className={`flex flex-col transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 lg:hidden'}`}>
-                                <span className="font-black text-sm tracking-tight text-white uppercase leading-tight">Painel Analítico</span>
-                                <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider mt-1 opacity-70">Projeto Família 2026.</span>
+                                <span className="font-black text-sm tracking-tight text-white uppercase leading-tight">Panel Analítico</span>
+                                <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider mt-1 opacity-70">Proyecto Familia 2026.</span>
                             </div>
                         </div>
 
@@ -458,7 +457,7 @@
                         </nav>
                     </aside>
 
-                    {/* Conteúdo Principal (Single Column Stack) */}
+                    {/* Conteúdo Principal */}
                     <main className={`sidebar-transition min-h-screen ${isSidebarOpen ? 'lg:pl-80' : 'lg:pl-20'}`}>
 
                         <header className="sticky top-0 z-40 bg-[#020617]/95 backdrop-blur-3xl px-6 md:px-12 py-3 flex items-center justify-between border-b border-white/5">
@@ -467,8 +466,8 @@
                             </button>
                             <div className="flex items-center gap-4 md:gap-10">
                                 <div className="text-right hidden sm:block text-slate-400 font-mono text-[9px]">
-                                    <p className="uppercase tracking-[0.4em] mb-0 font-black opacity-60 leading-none">Monitor Social em Tempo Real</p>
-                                    <p className="text-white font-black tracking-[0.2em] leading-none mt-1 uppercase">Projeto Global • N=10,214</p>
+                                    <p className="uppercase tracking-[0.4em] mb-0 font-black opacity-60 leading-none">Mapeo Social en Tiempo Real</p>
+                                    <p className="text-white font-black tracking-[0.2em] leading-none mt-1 uppercase">Proyecto Global • N=10,214</p>
                                 </div>
                                 <div className="w-9 h-9 rounded-xl glass-card flex items-center justify-center border-indigo-500/30 shrink-0">
                                     <i data-lucide="database" size="18" className="text-indigo-400"></i>
@@ -490,13 +489,13 @@
                             <div className="flex flex-col gap-6 md:gap-10 items-center md:items-start text-center md:text-left">
                                 <div className="flex items-center gap-6 opacity-90 group cursor-default">
                                     <div className="p-3 bg-indigo-600 rounded-[1.3rem] shadow-2xl shadow-indigo-500/40 transition-transform group-hover:scale-110"><i data-lucide="home" className="w-8 h-8 text-white"></i></div>
-                                    <span className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase leading-none">Radiografia <span className="text-indigo-500">2026</span></span>
+                                    <span className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase leading-none">Radiografía <span className="text-indigo-500">2026</span></span>
                                 </div>
-                                <p className="text-slate-500 text-xs md:text-sm max-w-lg leading-relaxed font-bold tracking-tight uppercase opacity-60 px-4 md:px-0">Análise avançada da subjetividad doméstica e transformação tecnológica.</p>
+                                <p className="text-slate-500 text-xs md:text-sm max-w-lg leading-relaxed font-bold tracking-tight uppercase opacity-60 px-4 md:px-0">Análisis avanzado de la subjetividad doméstica frente a la transformación tecnológica.</p>
                             </div>
                             <div className="grid grid-cols-2 gap-10 md:gap-20 text-slate-500 uppercase font-mono text-[9px] md:text-[11px] tracking-[0.5em] font-black text-center md:text-left">
                                 <div className="flex flex-col gap-4"><span className="text-white/20 uppercase tracking-[0.2em] font-bold">Diagnóstico</span><span className="text-indigo-400 underline decoration-indigo-500/30">Deep Analytics</span></div>
-                                <div className="flex flex-col gap-4"><span className="text-white/20 uppercase tracking-[0.2em] font-bold">Status</span><span className="text-indigo-400">Premium ELITE v7.0</span></div>
+                                <div className="flex flex-col gap-4"><span className="text-white/20 uppercase tracking-[0.2em] font-bold">Estado</span><span className="text-indigo-400">Premium ELITE v7.1</span></div>
                             </div>
                         </footer>
                     </main>
